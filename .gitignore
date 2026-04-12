@@ -1,0 +1,38 @@
+# Godot
+.godot/
+*.import
+export.cfg
+export_presets.cfg
+*.translation
+*.uid
+
+# Godot mono/C#
+.mono/
+data_*/
+mono_crash.*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Training artifacts
+training/checkpoints/*
+!training/checkpoints/.gitkeep
+*.zip
+*.onnx
+logs/
+runs/
+tensorboard/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
