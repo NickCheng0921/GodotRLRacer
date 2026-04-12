@@ -11,3 +11,11 @@ https://github.com/edbeeching/godot_rl_agents
 Doesn't show up in asset store
 
 Open project.godot and follow the guide to get started
+
+### Thoughts on implementation
+
+Guide isn't fully clear that the Sync node in the inherit for the Train scene isn't obviously from RL proj
+ - looks like a regular node, just called Sync
+ - need to expand it's script to find the parent owner
+
+Unclear how to save an agent/exit cleanly after, might not be a part of guide
