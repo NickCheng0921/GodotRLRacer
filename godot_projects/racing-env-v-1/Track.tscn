@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://by5amtskudh7v"]
+
+[ext_resource type="Texture2D" uid="uid://d1ipvdou0a1av" path="res://icon.svg" id="1_ytexg"]
+
+[sub_resource type="Curve3D" id="Curve3D_8dni2"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -0.16161013, 0, -0.61291504, 0, 0, 0, 0, 0, 0, 55.93839, 0, 6.1210823, 0, 0, 0, 0, 0, 0, 62.043392, 0, -24.844917, 0, 0, 0, 0, 0, 0, 56.26239, 0, -58.18992, 0, 0, 0, 0, 0, 0, 12.37239, 0, -70.225914, 0, 0, 0, 0, 0, 0, 0, 0, 15),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0)
+}
+point_count = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7by0s"]
+albedo_texture = ExtResource("1_ytexg")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fo0vr"]
+size = Vector3(150, 1, 150)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0j5gg"]
+albedo_color = Color(1, 0, 1, 1)
+albedo_texture = ExtResource("1_ytexg")
+
+[sub_resource type="BoxMesh" id="BoxMesh_ayymx"]
+material = SubResource("StandardMaterial3D_0j5gg")
+size = Vector3(150, 1, 150)
+
+[node name="Track" type="Node3D" unique_id=1443474820]
+
+[node name="trackpath" type="Path3D" parent="." unique_id=104294015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.844601, 0, 12.036669)
+curve = SubResource("Curve3D_8dni2")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="trackpath" unique_id=247855236]
+material_override = SubResource("StandardMaterial3D_7by0s")
+polygon = PackedVector2Array(-16, 0, -16, 0.1, 16, 0.1, 16, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = false
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+
+[node name="StaticGround" type="StaticBody3D" parent="." unique_id=521656747]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticGround" unique_id=1793119977]
+shape = SubResource("BoxShape3D_fo0vr")
+
+[node name="MeshGround" type="MeshInstance3D" parent="." unique_id=432625090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4659462, 0)
+mesh = SubResource("BoxMesh_ayymx")

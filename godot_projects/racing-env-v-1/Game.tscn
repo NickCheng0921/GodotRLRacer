@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://50eyux0ekmrf"]
+
+[ext_resource type="Script" uid="uid://dd3dhyak442rg" path="res://Game.gd" id="1_u44n3"]
+[ext_resource type="PackedScene" uid="uid://by5amtskudh7v" path="res://Track.tscn" id="1_xkndl"]
+[ext_resource type="PackedScene" uid="uid://c51spnwfgd3qk" path="res://Player.tscn" id="2_xkndl"]
+
+[node name="Game" type="Node3D" unique_id=1343398431]
+script = ExtResource("1_u44n3")
+
+[node name="Track" parent="." unique_id=1443474820 instance=ExtResource("1_xkndl")]
+
+[node name="Player" parent="." unique_id=621963996 instance=ExtResource("2_xkndl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0297947, 0)

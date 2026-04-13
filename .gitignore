@@ -5,6 +5,7 @@ export.cfg
 export_presets.cfg
 *.translation
 *.uid
+*.tmp
 
 # Godot mono/C#
 .mono/
