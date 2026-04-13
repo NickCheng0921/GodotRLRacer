@@ -6,12 +6,9 @@ Godot handles the physics simulation, gdrl handles the RL + bridge between simul
 
 # Current Progress
 
-Tutorial on gdrl finished
+Waypoint system in progress, still working on env. Demo below is human driven.
 
-Working on env for realistic driving simulation, currently in a very crude state
- - gif shows human operation, not an agent
-
-<img src="./assets/env_v1.gif" width=50% height=50%>
+<img src="./assets/env_v1.01.gif" width=75% height=75%>
 
 # To Run
 

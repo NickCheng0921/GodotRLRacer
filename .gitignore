@@ -37,3 +37,6 @@ tensorboard/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Personal
+godot_projects/racing-env-v-1/external_assets/

@@ -24,6 +24,6 @@ func _setup_topdown_viewport() -> void:
 	container.add_child(viewport)
 
 	var cam = Camera3D.new()
-	cam.position = Vector3(0, 82.701, 0)
+	cam.position = Vector3(0, 477.833, 0)
 	cam.rotation_degrees = Vector3(-90, 0, 0)
 	viewport.add_child(cam)
