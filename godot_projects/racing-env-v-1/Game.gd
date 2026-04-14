@@ -1,8 +1,63 @@
 extends Node3D
 
+var _waypoints: Array = []
+var _car: RigidBody3D
+var _tp_cooldown: float = 0.0
 
 func _ready() -> void:
 	_setup_topdown_viewport()
+	_setup_waypoints()
+	_car = $Player/BasicCar
+
+func _physics_process(delta: float) -> void:
+	if _tp_cooldown > 0.0:
+		_tp_cooldown -= delta
+		return
+	_check_off_road()
+
+func _setup_waypoints() -> void:
+	var wp_root = $Track/Waypoints
+	_waypoints = wp_root.get_children()
+	_waypoints.sort_custom(func(a, b): return a.name < b.name)
+
+func _is_over_road() -> bool:
+	var space_state := get_world_3d().direct_space_state
+	var from := _car.global_position + Vector3.UP * 1.0
+	var to   := _car.global_position + Vector3.DOWN * 5.0
+	# Layer 2 only — road Area3D, ignores ground and everything else
+	var query := PhysicsRayQueryParameters3D.create(from, to, 2)
+	query.collide_with_areas = true
+	var result := space_state.intersect_ray(query)
+	return not result.is_empty()
+
+func _check_off_road() -> void:
+	if not is_instance_valid(_car):
+		return
+	if not _is_over_road():
+		var idx := _get_closest_waypoint_index(_car.global_position)
+		_teleport_to_waypoint(idx)
+
+func _get_closest_waypoint_index(pos: Vector3) -> int:
+	var best_idx := 0
+	var best_dist := INF
+	for i in range(_waypoints.size()):
+		var d := pos.distance_to(_waypoints[i].global_position)
+		if d < best_dist:
+			best_dist = d
+			best_idx = i
+	return best_idx
+
+func _teleport_to_waypoint(idx: int) -> void:
+	var wp      := _waypoints[idx] as Node3D
+	var next_wp := _waypoints[(idx + 1) % _waypoints.size()] as Node3D
+
+	var forward: Vector3 = (next_wp.global_position - wp.global_position).normalized()
+	var new_basis := Basis.looking_at(forward, Vector3.UP)
+
+	_car.global_transform = Transform3D(new_basis, wp.global_position + Vector3.UP * 0.5)
+	_car.linear_velocity  = Vector3.ZERO
+	_car.angular_velocity = Vector3.ZERO
+	_tp_cooldown = 2.0
 
 # Create a small UI in bottom right w/ top down view
 func _setup_topdown_viewport() -> void:

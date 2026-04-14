@@ -33,3 +33,12 @@ Waypoint system in progress, still working on env. Demo below is human driven.
 - model selection, currently using gdrl default
 - reward function creation
     - waypoints, turning penalty, gas penalty, time
+
+# Waypoint generation
+
+Waypoint generation is a mostly automated process to help expedite map creation
+
+Paths are provided as (x,y,z) tuples in path_points/*.txt, and tools/generate_path.gd in the project turns them into a path3D + a CSGPolygon3D to provide the track w/ a mesh
+ - non-parsable lines are skipped (lets us add comments)
+ - the attached polygon can then be baked into a mesh (for human eyeballs) and a collision shape to keep track of whether the car's on the road
+ - waypoint creation is done by sampling the curve at even intervals, first waypoint goes to first point in .txt
