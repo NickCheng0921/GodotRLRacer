@@ -1,6 +1,10 @@
 extends Node3D
 
+const WAYPOINT_LOOKAHEAD := 2
+const WAYPOINT_ADVANCE_DIST := 8.0 # increment waypoint counter when we get close enough
+
 var _waypoints: Array = []
+var _waypoint_index: int = 1
 var _car: RigidBody3D
 var _tp_cooldown: float = 0.0
 
@@ -8,17 +12,42 @@ func _ready() -> void:
 	_setup_topdown_viewport()
 	_setup_waypoints()
 	_car = $Player/BasicCar
+	_push_waypoints_to_player()
+
+func _push_waypoints_to_player() -> void:
+	var player: Player = $Player
+	player.set_waypoints(get_next_waypoints(WAYPOINT_LOOKAHEAD))
+
+func get_next_waypoints(n: int) -> Array:
+	var result: Array = []
+	for i in range(n):
+		var idx := (_waypoint_index + i) % _waypoints.size()
+		result.append(_waypoints[idx].global_position)
+	return result
 
 func _physics_process(delta: float) -> void:
 	if _tp_cooldown > 0.0:
 		_tp_cooldown -= delta
 		return
+	_check_waypoint_advance()
 	_check_off_road()
+
+func _check_waypoint_advance() -> void:
+	var target := _waypoints[_waypoint_index] as Node3D
+	var cp := _car.global_position
+	var tp := target.global_position
+	var xz_dist := Vector2(cp.x - tp.x, cp.z - tp.z).length()
+	if xz_dist < WAYPOINT_ADVANCE_DIST:
+		_waypoint_index = (_waypoint_index + 1) % _waypoints.size()
+		_push_waypoints_to_player()
 
 func _setup_waypoints() -> void:
 	var wp_root = $Track/Waypoints
 	_waypoints = wp_root.get_children()
-	_waypoints.sort_custom(func(a, b): return a.name < b.name)
+	_waypoints.sort_custom(func(a, b):
+		var a_n := str(a.name).split("_")[-1].to_int()
+		var b_n := str(b.name).split("_")[-1].to_int()
+		return a_n < b_n)
 
 func _is_over_road() -> bool:
 	var space_state := get_world_3d().direct_space_state
