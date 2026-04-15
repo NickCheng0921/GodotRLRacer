@@ -7,12 +7,18 @@ var _waypoints: Array = []
 var _waypoint_index: int = 1
 var _car: RigidBody3D
 var _tp_cooldown: float = 0.0
+var _ai: Node3D
+var _prev_dist_to_target: float = 0.0
 
 func _ready() -> void:
 	_setup_topdown_viewport()
 	_setup_waypoints()
 	_car = $Player/BasicCar
+	_ai = $Player/AIController3D
+	_ai.action_repeat = 8
 	_push_waypoints_to_player()
+	var tp : Vector3 = _waypoints[_waypoint_index].global_position
+	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
 
 func _push_waypoints_to_player() -> void:
 	var player: Player = $Player
@@ -31,6 +37,20 @@ func _physics_process(delta: float) -> void:
 		return
 	_check_waypoint_advance()
 	_check_off_road()
+	_reward_progress()
+	_reward_throttle()
+
+func _reward_throttle() -> void:
+	if _ai.throttle_action == 1:
+		_ai.reward += 0.01
+
+func _reward_progress() -> void:
+	var tp : Vector3 = _waypoints[_waypoint_index].global_position
+	var cp := _car.global_position
+	var curr_dist := Vector2(cp.x - tp.x, cp.z - tp.z).length()
+	if _car.linear_velocity.length() > 0.5:
+		_ai.reward += (_prev_dist_to_target - curr_dist) * 0.01
+	_prev_dist_to_target = curr_dist
 
 func _check_waypoint_advance() -> void:
 	var target := _waypoints[_waypoint_index] as Node3D
@@ -40,6 +60,7 @@ func _check_waypoint_advance() -> void:
 	if xz_dist < WAYPOINT_ADVANCE_DIST:
 		_waypoint_index = (_waypoint_index + 1) % _waypoints.size()
 		_push_waypoints_to_player()
+		_ai.reward += 1.0
 
 func _setup_waypoints() -> void:
 	var wp_root = $Track/Waypoints
@@ -62,31 +83,27 @@ func _is_over_road() -> bool:
 func _check_off_road() -> void:
 	if not is_instance_valid(_car):
 		return
-	if not _is_over_road():
-		var idx := _get_closest_waypoint_index(_car.global_position)
+	if not _is_over_road() or _is_flipped():
+		var idx := (_waypoint_index - 1 + _waypoints.size()) % _waypoints.size()
 		_teleport_to_waypoint(idx)
 
-func _get_closest_waypoint_index(pos: Vector3) -> int:
-	var best_idx := 0
-	var best_dist := INF
-	for i in range(_waypoints.size()):
-		var d := pos.distance_to(_waypoints[i].global_position)
-		if d < best_dist:
-			best_dist = d
-			best_idx = i
-	return best_idx
+func _is_flipped() -> bool:
+	return _car.global_transform.basis.y.dot(Vector3.UP) < 0.0
+
 
 func _teleport_to_waypoint(idx: int) -> void:
 	var wp      := _waypoints[idx] as Node3D
 	var next_wp := _waypoints[(idx + 1) % _waypoints.size()] as Node3D
 
 	var forward: Vector3 = (next_wp.global_position - wp.global_position).normalized()
-	var new_basis := Basis.looking_at(forward, Vector3.UP)
+	var new_basis := Basis.looking_at(forward, Vector3.UP).rotated(Vector3.UP, PI / 2.0)
 
 	_car.global_transform = Transform3D(new_basis, wp.global_position + Vector3.UP * 0.5)
 	_car.linear_velocity  = Vector3.ZERO
 	_car.angular_velocity = Vector3.ZERO
 	_tp_cooldown = 2.0
+	_prev_dist_to_target = 0.0
+	_ai.reward -= 1.0
 
 # Create a small UI in bottom right w/ top down view
 func _setup_topdown_viewport() -> void:

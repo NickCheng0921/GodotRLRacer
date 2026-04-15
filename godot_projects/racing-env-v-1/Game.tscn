@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dd3dhyak442rg" path="res://Game.gd" id="1_u44n3"]
 [ext_resource type="PackedScene" uid="uid://c51spnwfgd3qk" path="res://Player.tscn" id="2_xkndl"]
+[ext_resource type="Script" uid="uid://cgluo0suh3bck" path="res://addons/godot_rl_agents/sync.gd" id="3_u44n3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_t88pq"]
 size = Vector3(1000, 1, 1000)
@@ -385,3 +386,7 @@ collision_layer = 2
 
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Track/Area3D" unique_id=1404766337]
 shape = SubResource("ConcavePolygonShape3D_xkndl")
+
+[node name="Sync" type="Node" parent="." unique_id=1474273766]
+script = ExtResource("3_u44n3")
+metadata/_custom_type_script = "uid://cgluo0suh3bck"

@@ -6,9 +6,17 @@ Godot handles the physics simulation, gdrl handles the RL + bridge between simul
 
 # Current Progress
 
-Waypoint system in progress, still working on env. Demo below is human driven.
+Agent reward design in progress. Current agent drives sporadically then has long periods of inactivity.
+ - Waypoint system in progress, still working on env. Demo below is human driven.
 
-<img src="./assets/env_v1.01.gif" width=75% height=75%>
+Human driven on left, agent learning on right in 4x speed
+ - agent rewards: moving closer to next waypoint, using throttle
+ - agent penalties: flipping the car over, moving off track, moving away from next waypoint
+
+<div style="display: flex;">
+  <img src="./assets/env_v1.01.gif" width="50%">
+  <img src="./assets/agent_v1.gif" width="50%">
+</div>
 
 # To Run
 
@@ -24,10 +32,7 @@ Waypoint system in progress, still working on env. Demo below is human driven.
 **Environment**
 - facelift: lighting, meshes, level scenery
 - parallelized environment (multiple cars in one level + creation of a project executable to pass to gdrl)
-- car flips since acceleration is too large currently
 - add raycast sensors to car for RL observations
-- map creation through curvilinear coords + script, currently manual using Path3D
-    - greatly simplifies waypoint design for reward
 
 **RL**
 - model selection, currently using gdrl default

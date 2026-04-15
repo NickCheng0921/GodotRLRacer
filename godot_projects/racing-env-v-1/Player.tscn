@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b7ob43i27p0if" path="res://Player.gd" id="1_kpjcp"]
 [ext_resource type="PackedScene" uid="uid://ov7yqd82e1sf" path="res://basic_car.tscn" id="2_kpjcp"]
+[ext_resource type="Script" uid="uid://b2gv2em0vlint" path="res://ai_driver.gd" id="3_kne1u"]
 
 [node name="Player" type="Node3D" unique_id=621963996]
 script = ExtResource("1_kpjcp")
@@ -11,3 +12,7 @@ max_engine_force = 350.0
 
 [node name="Camera3D" type="Camera3D" parent="BasicCar" unique_id=448384771]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -9, 4.336611, 0)
+
+[node name="AIController3D" type="Node3D" parent="." unique_id=1189950734]
+script = ExtResource("3_kne1u")
+metadata/_custom_type_script = "uid://bph8d8tkhjhq7"

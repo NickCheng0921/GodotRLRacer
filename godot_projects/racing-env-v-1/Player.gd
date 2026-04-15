@@ -12,6 +12,8 @@ var _print_timer: float = 0.0
 var _w1_marker: MeshInstance3D
 
 func _ready() -> void:
+	$AIController3D.init(self)
+
 	# Put a red marker above next target waypoint
 	var sphere := SphereMesh.new()
 	sphere.radius = 2.0
@@ -44,9 +46,16 @@ func _print_waypoint_info() -> void:
 		parts.append("W%02d(fwd %.0f, side %.0f) d=%.0f" % [_waypoint_start_index + i, local_offset.x, -local_offset.z, dist])
 	var speed : float = $BasicCar.linear_velocity.length()
 	parts.append("spd %.1f" % speed)
+	parts.append("rwd %.4f" % $AIController3D.reward)
 	print(" | ".join(parts))
 
+
 func _physics_process(delta):
+	var ai := $AIController3D
+	if ai.needs_reset:
+		ai.reset()
+		return
+
 	if upcoming_waypoints.size() > 0 and _w1_marker.is_inside_tree():
 		var w1: Vector3 = upcoming_waypoints[0]
 		_w1_marker.global_position = Vector3(w1.x, w1.y + 5.0, w1.z)
@@ -56,12 +65,21 @@ func _physics_process(delta):
 		_print_timer = 0.0
 		_print_waypoint_info()
 
-	if Input.is_action_pressed("ui_forward"):
-		$BasicCar.accelerate($BasicCar.max_engine_force)
-	elif Input.is_action_pressed("ui_backward"):
-		$BasicCar.apply_brake($BasicCar.max_brake)
+	if ai.heuristic == "human":
+		if Input.is_action_pressed("ui_forward"):
+			$BasicCar.accelerate($BasicCar.max_engine_force)
+		elif Input.is_action_pressed("ui_backward"):
+			$BasicCar.apply_brake($BasicCar.max_brake)
+		else:
+			$BasicCar.reset_vehicle_controls(delta)
+		var turn := Input.get_axis("ui_left", "ui_right")
+		$BasicCar.steer(-turn * $BasicCar.max_steering_angle)
 	else:
-		$BasicCar.reset_vehicle_controls(delta)
-
-	var turn = Input.get_axis("ui_left", "ui_right")
-	$BasicCar.steer(-turn * $BasicCar.max_steering_angle)
+		match ai.throttle_action:
+			1: $BasicCar.accelerate($BasicCar.max_engine_force)
+			2: $BasicCar.apply_brake($BasicCar.max_brake)
+			_: $BasicCar.reset_vehicle_controls(delta)
+		match ai.steer_action:
+			1: $BasicCar.steer($BasicCar.max_steering_angle)
+			2: $BasicCar.steer(-$BasicCar.max_steering_angle)
+			_: $BasicCar.steer(0.0)
