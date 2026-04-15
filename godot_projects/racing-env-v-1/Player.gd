@@ -7,10 +7,12 @@ var finished: bool = false
 var distance_traveled: float = 0.0
 
 var upcoming_waypoints: Array = []
+var _waypoint_start_index: int = 0
 var _print_timer: float = 0.0
 var _w1_marker: MeshInstance3D
 
 func _ready() -> void:
+	# Put a red marker above next target waypoint
 	var sphere := SphereMesh.new()
 	sphere.radius = 2.0
 	sphere.height = 4.0
@@ -24,18 +26,24 @@ func _ready() -> void:
 	_w1_marker.material_override = mat
 	get_tree().current_scene.add_child.call_deferred(_w1_marker)
 
-func set_waypoints(waypoints: Array) -> void:
+func set_waypoints(waypoints: Array, start_index: int) -> void:
 	upcoming_waypoints = waypoints
+	_waypoint_start_index = start_index
 
 func _print_waypoint_info() -> void:
-	var car_pos : Vector3 = $BasicCar.global_position
+	var car := $BasicCar
+	var car_pos : Vector3 = car.global_position
+	var car_basis : Basis = car.global_transform.basis
 	var parts: Array = []
 	for i in range(upcoming_waypoints.size()):
 		var wp: Vector3 = upcoming_waypoints[i]
-		var dx := wp.x - car_pos.x
-		var dz := wp.z - car_pos.z
-		var dist := sqrt(dx * dx + dz * dz)
-		parts.append("W%d(rel %.0f,%.0f) d=%.0f" % [i + 1, dx, dz, dist])
+		var world_offset := Vector3(wp.x - car_pos.x, 0.0, wp.z - car_pos.z)
+		var local_offset := car_basis.inverse() * world_offset
+		# local_offset.x = forward(+)/back(-), local_offset.z = left(+)/right(-)
+		var dist := world_offset.length()
+		parts.append("W%02d(fwd %.0f, side %.0f) d=%.0f" % [_waypoint_start_index + i, local_offset.x, -local_offset.z, dist])
+	var speed : float = $BasicCar.linear_velocity.length()
+	parts.append("spd %.1f" % speed)
 	print(" | ".join(parts))
 
 func _physics_process(delta):

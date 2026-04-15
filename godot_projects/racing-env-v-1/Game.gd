@@ -16,7 +16,7 @@ func _ready() -> void:
 
 func _push_waypoints_to_player() -> void:
 	var player: Player = $Player
-	player.set_waypoints(get_next_waypoints(WAYPOINT_LOOKAHEAD))
+	player.set_waypoints(get_next_waypoints(WAYPOINT_LOOKAHEAD), _waypoint_index)
 
 func get_next_waypoints(n: int) -> Array:
 	var result: Array = []
