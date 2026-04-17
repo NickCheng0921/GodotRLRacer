@@ -1,20 +1,12 @@
 [gd_scene format=3 uid="uid://ov7yqd82e1sf"]
 
 [ext_resource type="Script" uid="uid://k4tr6jk3ym2s" path="res://basic_car.gd" id="1_dl6l5"]
-[ext_resource type="Texture2D" uid="uid://d1ipvdou0a1av" path="res://icon.svg" id="1_fcmuq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dl6l5"]
-albedo_color = Color(0.16078432, 1, 1, 1)
-albedo_texture = ExtResource("1_fcmuq")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wjph6"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fsndj"]
 albedo_color = Color(1, 0, 0, 1)
-albedo_texture = ExtResource("1_fcmuq")
 
 [sub_resource type="BoxMesh" id="BoxMesh_1i8vd"]
-material = SubResource("StandardMaterial3D_fsndj")
+material = SubResource("StandardMaterial3D_dl6l5")
 size = Vector3(4, 1, 2)
 
 [sub_resource type="Skin" id="Skin_5rxtv"]
@@ -29,8 +21,6 @@ script = ExtResource("1_dl6l5")
 max_engine_force = 800.0
 
 [node name="MeshBody" type="MeshInstance3D" parent="." unique_id=355040216]
-material_override = SubResource("StandardMaterial3D_dl6l5")
-material_overlay = SubResource("StandardMaterial3D_wjph6")
 mesh = SubResource("BoxMesh_1i8vd")
 skin = SubResource("Skin_5rxtv")
 

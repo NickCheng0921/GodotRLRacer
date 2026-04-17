@@ -16,17 +16,17 @@ Below images show human driven + agent learning at different stages
 
 <div style="display: flex;">
   <figure style="width: 50%; text-align: center;">
-    <img src="./assets/env_v1.01.gif" width="100%">
+    <img src="./assets/env_v1.01.gif" width="33%">
     <figcaption>Human Driven, 1x speed</figcaption>
   </figure>
 
   <figure style="width: 50%; text-align: center;">
-    <img src="./assets/agent_v1.gif" width="100%">
+    <img src="./assets/agent_v1.gif" width="33%">
     <figcaption>RL Racing Agent, 4x speed, 80k timesteps</figcaption>
   </figure>
 
   <figure style="width: 50%; text-align: center;">
-    <img src="./assets/agent_v1.01_320K.gif" width="100%">
+    <img src="./assets/agent_v1.01_320K.gif" width="33%">
     <figcaption>RL Racing Agent, 1x speed, 320k timesteps</figcaption>
   </figure>
 </div>

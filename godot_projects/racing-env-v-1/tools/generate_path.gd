@@ -4,11 +4,11 @@ extends EditorScript
 # ─────────────────────────────────────────────
 #  Config — edit these before running
 # ─────────────────────────────────────────────
-const POINTS_FILE    := "res://path_points/copperstone_path.txt"  # path to your x y z file
-const PATH_NODE_NAME := "GeneratedTrackPath"     # name given to the new Path3D node
+const POINTS_FILE    := "res://path_points/clover_path.txt"  # path to your x y z file
+const PATH_NODE_NAME := "Path3DClover"     # name given to the new Path3D node
 const SMOOTH_TENSION := 0.5                 # Catmull-Rom tension  (0.0 = loose, 1.0 = tight)
 
-const WAYPOINT_COUNT := 20
+const WAYPOINT_COUNT := 40
 const WAYPOINT_HEIGHT := 5.0
 
 # ─────────────────────────────────────────────
