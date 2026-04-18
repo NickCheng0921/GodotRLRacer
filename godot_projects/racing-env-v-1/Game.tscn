@@ -112,10 +112,6 @@ material = SubResource("StandardMaterial3D_3mrqo")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1337436878]
 environment = SubResource("Environment_u44n3")
 
-[node name="Sync" type="Node" parent="." unique_id=2030958865]
-script = ExtResource("3_u44n3")
-metadata/_custom_type_script = "uid://cgluo0suh3bck"
-
 [node name="Track" type="Node3D" parent="." unique_id=896036328]
 
 [node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Track" unique_id=825545589]
@@ -390,3 +386,7 @@ collision_layer = 2
 
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Track/Area3D" unique_id=2113302548]
 shape = SubResource("ConcavePolygonShape3D_w2501")
+
+[node name="Sync" type="Node" parent="." unique_id=1876224896]
+script = ExtResource("3_u44n3")
+metadata/_custom_type_script = "uid://cgluo0suh3bck"

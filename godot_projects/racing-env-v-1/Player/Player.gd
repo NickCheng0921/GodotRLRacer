@@ -14,6 +14,23 @@ var _w1_marker: MeshInstance3D
 func _ready() -> void:
 	$AIController3D.init(self)
 
+	# Minimap arrow: horizontal cone on render layer 2, invisible to main camera
+	var cone := CylinderMesh.new()
+	cone.top_radius = 0.0
+	cone.bottom_radius = 20.0
+	cone.height = cone.bottom_radius * 2.5
+	var arrow_mat := StandardMaterial3D.new()
+	arrow_mat.albedo_color = Color.RED
+	arrow_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var minimap_arrow := MeshInstance3D.new()
+	minimap_arrow.mesh = cone
+	minimap_arrow.material_override = arrow_mat
+	minimap_arrow.layers = 2
+	var half_height := cone.bottom_radius * 2.5 / 2.0
+	minimap_arrow.position = Vector3(half_height, 12, 0)  # shift so car sits at arrow base
+	minimap_arrow.rotation_degrees = Vector3(90, 90, 0)
+	$BasicCar.add_child(minimap_arrow)
+
 	# Put a red marker above next target waypoint
 	var sphere := SphereMesh.new()
 	sphere.radius = 2.0

@@ -14,8 +14,10 @@ func _ready() -> void:
 	_setup_topdown_viewport()
 	_setup_waypoints()
 	_car = $Player/BasicCar
+	var main_cam: Camera3D = $Player/BasicCar/Camera3D
+	main_cam.cull_mask &= ~(1 << 1)  # hide render layer 2 (minimap arrow)
 	_ai = $Player/AIController3D
-	_ai.action_repeat = 8
+	_ai.action_repeat = 8 # update action every n frames (hold for n)
 	_push_waypoints_to_player()
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
