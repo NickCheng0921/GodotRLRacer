@@ -387,6 +387,7 @@ collision_layer = 2
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Track/Area3D" unique_id=2113302548]
 shape = SubResource("ConcavePolygonShape3D_w2501")
 
-[node name="Sync" type="Node" parent="." unique_id=1876224896]
+[node name="Sync" type="Node" parent="." unique_id=1902602992]
 script = ExtResource("3_u44n3")
+control_mode = 0
 metadata/_custom_type_script = "uid://cgluo0suh3bck"
