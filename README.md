@@ -31,13 +31,22 @@ Below images show human driven + agent learning at different stages
   </figure>
 </div>
 
-# To Run
+# To play manually
 
 ```
 1. Pull this project
 2. Download Godot 4.6.2
 3. Import godot_projects/racing-env-v-1/project.godot using the Godot engine import menu
-4. Hit Run in the editor
+4. Delete the Sync node in the Game scene
+5. Hit Run in the editor
+```
+
+# Train + Inference
+
+```
+1. Run train.py then run the game
+ - alternatively, export the game as an .exe and pass the path as a CLI arg for physics speedup
+2. Once train is done, a `racer_ppo.zip will be made`, run inference.py to deploy your model onto the track
 ```
 
 # Planned Next Steps
