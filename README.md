@@ -6,28 +6,22 @@ Godot handles the physics simulation, gdrl handles the RL + bridge between simul
 
 # Current Progress
 
-Agent reward design in progress. RL Agent can learn to drive between waypoints reasonable well at 320K timesteps (313 updates).
- - agent observes: speed, loc of next 2 waypoints relative to self, whether we're on the ground
+Working on agent reward design for smoother, faster driving
 
-Below images show human driven + agent learning at different stages
- - notice how the 80k step agent has really jerky movements and constantly goes off track compared to 320k
+Human driving is currently smoother, but the agent learns the track decently in ~430 iterations across 500k steps
+ - notice how the agent has really jerky movements, no penalty for steering or gas usage
  - agent rewards: moving closer to next waypoint, using throttle
  - agent penalties: flipping the car over, moving off track, moving away from next waypoint
 
 <div style="display: flex;">
   <figure style="width: 50%; text-align: center;">
-    <img src="./assets/env_v1.01.gif" width="33%">
+    <img src="./assets/env_v1.01.gif" width="50%">
     <figcaption>Human Driven, 1x speed</figcaption>
   </figure>
 
   <figure style="width: 50%; text-align: center;">
-    <img src="./assets/agent_v1.gif" width="33%">
-    <figcaption>RL Racing Agent, 4x speed, 80k timesteps</figcaption>
-  </figure>
-
-  <figure style="width: 50%; text-align: center;">
-    <img src="./assets/agent_v1.01_320K.gif" width="33%">
-    <figcaption>RL Racing Agent, 1x speed, 320k timesteps</figcaption>
+    <img src="./assets/agent_v1.02_500k.gif" width="50%">
+    <figcaption>RL Racing Agent, 2x speed </figcaption>
   </figure>
 </div>
 
@@ -53,12 +47,11 @@ Below images show human driven + agent learning at different stages
 
 **Environment**
 - facelift: lighting, meshes, level scenery
-- parallelized environment (multiple cars in one level + creation of a project executable to pass to gdrl)
 - tune raycast sensors, adjust spacing and amount
   - currently set to 100 meters max, heuristic march then bin search to get distance of car to road
 
 **RL**
-- model selection, currently using gdrl default
+- model selection, currently using gdrl defaults
 - reward function creation
     - waypoints, turning penalty, gas penalty, time
 
