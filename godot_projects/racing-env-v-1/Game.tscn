@@ -8,7 +8,7 @@
 size = Vector3(1000, 1, 1000)
 
 [sub_resource type="BoxMesh" id="BoxMesh_r0x5m"]
-size = Vector3(1000, 1, 1000)
+size = Vector3(1500, 1, 1500)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3mrqo"]
 albedo_color = Color(0, 0, 0, 1)
@@ -112,282 +112,282 @@ material = SubResource("StandardMaterial3D_3mrqo")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1337436878]
 environment = SubResource("Environment_u44n3")
 
-[node name="Track" type="Node3D" parent="." unique_id=896036328]
+[node name="Sync" type="Node" parent="." unique_id=1902602992]
+script = ExtResource("3_u44n3")
+control_mode = 0
+metadata/_custom_type_script = "uid://cgluo0suh3bck"
 
-[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Track" unique_id=825545589]
+[node name="Track" type="Node3D" parent="." unique_id=1061169641]
+
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Track" unique_id=1030394007]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("ArrayMesh_u44n3")
 
-[node name="Waypoints" type="Node3D" parent="Track" unique_id=384606638]
+[node name="Waypoints" type="Node3D" parent="Track" unique_id=936462071]
 
-[node name="Waypoint_00" type="Area3D" parent="Track/Waypoints" unique_id=1788394162]
+[node name="Waypoint_00" type="Area3D" parent="Track/Waypoints" unique_id=896508725]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 
-[node name="_CollisionShape3D_49644" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_00" unique_id=1609267541]
+[node name="_CollisionShape3D_49644" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_00" unique_id=1312529667]
 shape = SubResource("SphereShape3D_sb48q")
 disabled = true
 
-[node name="_Label3D_49645" type="Label3D" parent="Track/Waypoints/Waypoint_00" unique_id=918380422]
+[node name="_Label3D_49645" type="Label3D" parent="Track/Waypoints/Waypoint_00" unique_id=891894603]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "00"
 
-[node name="Waypoint_01" type="Area3D" parent="Track/Waypoints" unique_id=188754957]
+[node name="Waypoint_01" type="Area3D" parent="Track/Waypoints" unique_id=1497888903]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 97.73366, 5, -24.137102)
 
-[node name="_CollisionShape3D_49646" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_01" unique_id=1379523215]
+[node name="_CollisionShape3D_49646" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_01" unique_id=964464875]
 shape = SubResource("SphereShape3D_t88pq")
 disabled = true
 
-[node name="_Label3D_49647" type="Label3D" parent="Track/Waypoints/Waypoint_01" unique_id=713637344]
+[node name="_Label3D_49647" type="Label3D" parent="Track/Waypoints/Waypoint_01" unique_id=253034081]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "01"
 
-[node name="Waypoint_02" type="Area3D" parent="Track/Waypoints" unique_id=547299774]
+[node name="Waypoint_02" type="Area3D" parent="Track/Waypoints" unique_id=1102557081]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 192.19606, 5, -13.130489)
 
-[node name="_CollisionShape3D_49648" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_02" unique_id=12632113]
+[node name="_CollisionShape3D_49648" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_02" unique_id=1995682631]
 shape = SubResource("SphereShape3D_r0x5m")
 disabled = true
 
-[node name="_Label3D_49649" type="Label3D" parent="Track/Waypoints/Waypoint_02" unique_id=271420031]
+[node name="_Label3D_49649" type="Label3D" parent="Track/Waypoints/Waypoint_02" unique_id=1786391561]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "02"
 
-[node name="Waypoint_03" type="Area3D" parent="Track/Waypoints" unique_id=178206552]
+[node name="Waypoint_03" type="Area3D" parent="Track/Waypoints" unique_id=1950159179]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 256.48795, 5, 63.483345)
 
-[node name="_CollisionShape3D_49650" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_03" unique_id=1203139391]
+[node name="_CollisionShape3D_49650" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_03" unique_id=574759855]
 shape = SubResource("SphereShape3D_3mrqo")
 disabled = true
 
-[node name="_Label3D_49651" type="Label3D" parent="Track/Waypoints/Waypoint_03" unique_id=1018649714]
+[node name="_Label3D_49651" type="Label3D" parent="Track/Waypoints/Waypoint_03" unique_id=919377303]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "03"
 
-[node name="Waypoint_04" type="Area3D" parent="Track/Waypoints" unique_id=1762684221]
+[node name="Waypoint_04" type="Area3D" parent="Track/Waypoints" unique_id=1956298080]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 240.13718, 5, 159.6803)
 
-[node name="_CollisionShape3D_49652" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_04" unique_id=445850802]
+[node name="_CollisionShape3D_49652" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_04" unique_id=1924198981]
 shape = SubResource("SphereShape3D_joorw")
 disabled = true
 
-[node name="_Label3D_49653" type="Label3D" parent="Track/Waypoints/Waypoint_04" unique_id=2047894070]
+[node name="_Label3D_49653" type="Label3D" parent="Track/Waypoints/Waypoint_04" unique_id=1902154886]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "04"
 
-[node name="Waypoint_05" type="Area3D" parent="Track/Waypoints" unique_id=413725676]
+[node name="Waypoint_05" type="Area3D" parent="Track/Waypoints" unique_id=607856115]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 184.3454, 5, 242.93185)
 
-[node name="_CollisionShape3D_49654" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_05" unique_id=377151469]
+[node name="_CollisionShape3D_49654" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_05" unique_id=1780999300]
 shape = SubResource("SphereShape3D_2vekm")
 disabled = true
 
-[node name="_Label3D_49655" type="Label3D" parent="Track/Waypoints/Waypoint_05" unique_id=1509351132]
+[node name="_Label3D_49655" type="Label3D" parent="Track/Waypoints/Waypoint_05" unique_id=560477592]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "05"
 
-[node name="Waypoint_06" type="Area3D" parent="Track/Waypoints" unique_id=1229477720]
+[node name="Waypoint_06" type="Area3D" parent="Track/Waypoints" unique_id=1346624798]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 93.13117, 5, 279.82272)
 
-[node name="_CollisionShape3D_49656" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_06" unique_id=1721238221]
+[node name="_CollisionShape3D_49656" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_06" unique_id=70640421]
 shape = SubResource("SphereShape3D_yx171")
 disabled = true
 
-[node name="_Label3D_49657" type="Label3D" parent="Track/Waypoints/Waypoint_06" unique_id=2059181202]
+[node name="_Label3D_49657" type="Label3D" parent="Track/Waypoints/Waypoint_06" unique_id=339918477]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "06"
 
-[node name="Waypoint_07" type="Area3D" parent="Track/Waypoints" unique_id=619934581]
+[node name="Waypoint_07" type="Area3D" parent="Track/Waypoints" unique_id=43143449]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.569241, 5, 263.4838)
 
-[node name="_CollisionShape3D_49658" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_07" unique_id=795446754]
+[node name="_CollisionShape3D_49658" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_07" unique_id=1922469031]
 shape = SubResource("SphereShape3D_yhmtn")
 disabled = true
 
-[node name="_Label3D_49659" type="Label3D" parent="Track/Waypoints/Waypoint_07" unique_id=2102971697]
+[node name="_Label3D_49659" type="Label3D" parent="Track/Waypoints/Waypoint_07" unique_id=1389956670]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "07"
 
-[node name="Waypoint_08" type="Area3D" parent="Track/Waypoints" unique_id=699531292]
+[node name="Waypoint_08" type="Area3D" parent="Track/Waypoints" unique_id=500458202]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -102.01659, 5, 240.26949)
 
-[node name="_CollisionShape3D_49660" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_08" unique_id=1995652814]
+[node name="_CollisionShape3D_49660" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_08" unique_id=625069592]
 shape = SubResource("SphereShape3D_gwjdr")
 disabled = true
 
-[node name="_Label3D_49661" type="Label3D" parent="Track/Waypoints/Waypoint_08" unique_id=2142780100]
+[node name="_Label3D_49661" type="Label3D" parent="Track/Waypoints/Waypoint_08" unique_id=1267203859]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "08"
 
-[node name="Waypoint_09" type="Area3D" parent="Track/Waypoints" unique_id=1006758091]
+[node name="Waypoint_09" type="Area3D" parent="Track/Waypoints" unique_id=1205178997]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -191.39047, 5, 284.46936)
 
-[node name="_CollisionShape3D_49662" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_09" unique_id=856421543]
+[node name="_CollisionShape3D_49662" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_09" unique_id=1330012863]
 shape = SubResource("SphereShape3D_lvtmh")
 disabled = true
 
-[node name="_Label3D_49663" type="Label3D" parent="Track/Waypoints/Waypoint_09" unique_id=502950775]
+[node name="_Label3D_49663" type="Label3D" parent="Track/Waypoints/Waypoint_09" unique_id=264594865]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "09"
 
-[node name="Waypoint_10" type="Area3D" parent="Track/Waypoints" unique_id=81309092]
+[node name="Waypoint_10" type="Area3D" parent="Track/Waypoints" unique_id=1231576695]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -289.4446, 5, 299.66992)
 
-[node name="_CollisionShape3D_49664" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_10" unique_id=729463522]
+[node name="_CollisionShape3D_49664" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_10" unique_id=940540852]
 shape = SubResource("SphereShape3D_yyih5")
 disabled = true
 
-[node name="_Label3D_49665" type="Label3D" parent="Track/Waypoints/Waypoint_10" unique_id=260447635]
+[node name="_Label3D_49665" type="Label3D" parent="Track/Waypoints/Waypoint_10" unique_id=1960062567]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "10"
 
-[node name="Waypoint_11" type="Area3D" parent="Track/Waypoints" unique_id=686681823]
+[node name="Waypoint_11" type="Area3D" parent="Track/Waypoints" unique_id=1066511075]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -383.4376, 5, 267.1093)
 
-[node name="_CollisionShape3D_49666" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_11" unique_id=1807544217]
+[node name="_CollisionShape3D_49666" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_11" unique_id=152341843]
 shape = SubResource("SphereShape3D_qjyg3")
 disabled = true
 
-[node name="_Label3D_49667" type="Label3D" parent="Track/Waypoints/Waypoint_11" unique_id=507452214]
+[node name="_Label3D_49667" type="Label3D" parent="Track/Waypoints/Waypoint_11" unique_id=2147052157]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "11"
 
-[node name="Waypoint_12" type="Area3D" parent="Track/Waypoints" unique_id=1497110195]
+[node name="Waypoint_12" type="Area3D" parent="Track/Waypoints" unique_id=1713353820]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -437.06207, 5, 183.63255)
 
-[node name="_CollisionShape3D_49668" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_12" unique_id=2043851673]
+[node name="_CollisionShape3D_49668" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_12" unique_id=647697459]
 shape = SubResource("SphereShape3D_elkpi")
 disabled = true
 
-[node name="_Label3D_49669" type="Label3D" parent="Track/Waypoints/Waypoint_12" unique_id=1864137357]
+[node name="_Label3D_49669" type="Label3D" parent="Track/Waypoints/Waypoint_12" unique_id=1371234562]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "12"
 
-[node name="Waypoint_13" type="Area3D" parent="Track/Waypoints" unique_id=531942844]
+[node name="Waypoint_13" type="Area3D" parent="Track/Waypoints" unique_id=2003919151]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -431.45483, 5, 84.20394)
 
-[node name="_CollisionShape3D_49670" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_13" unique_id=1562277952]
+[node name="_CollisionShape3D_49670" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_13" unique_id=583735219]
 shape = SubResource("SphereShape3D_0yprl")
 disabled = true
 
-[node name="_Label3D_49671" type="Label3D" parent="Track/Waypoints/Waypoint_13" unique_id=1973413591]
+[node name="_Label3D_49671" type="Label3D" parent="Track/Waypoints/Waypoint_13" unique_id=623477772]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "13"
 
-[node name="Waypoint_14" type="Area3D" parent="Track/Waypoints" unique_id=1479249955]
+[node name="Waypoint_14" type="Area3D" parent="Track/Waypoints" unique_id=209670326]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -369.53888, 5, 7.449088)
 
-[node name="_CollisionShape3D_49672" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_14" unique_id=683912086]
+[node name="_CollisionShape3D_49672" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_14" unique_id=657938892]
 shape = SubResource("SphereShape3D_wuoie")
 disabled = true
 
-[node name="_Label3D_49673" type="Label3D" parent="Track/Waypoints/Waypoint_14" unique_id=31836276]
+[node name="_Label3D_49673" type="Label3D" parent="Track/Waypoints/Waypoint_14" unique_id=1565529037]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "14"
 
-[node name="Waypoint_15" type="Area3D" parent="Track/Waypoints" unique_id=733605676]
+[node name="Waypoint_15" type="Area3D" parent="Track/Waypoints" unique_id=431420156]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -331.66138, 5, -83.370735)
 
-[node name="_CollisionShape3D_49674" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_15" unique_id=827543780]
+[node name="_CollisionShape3D_49674" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_15" unique_id=2133418685]
 shape = SubResource("SphereShape3D_bvhbk")
 disabled = true
 
-[node name="_Label3D_49675" type="Label3D" parent="Track/Waypoints/Waypoint_15" unique_id=955280748]
+[node name="_Label3D_49675" type="Label3D" parent="Track/Waypoints/Waypoint_15" unique_id=565771006]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "15"
 
-[node name="Waypoint_16" type="Area3D" parent="Track/Waypoints" unique_id=8309634]
+[node name="Waypoint_16" type="Area3D" parent="Track/Waypoints" unique_id=851978507]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -281.12607, 5, -167.24474)
 
-[node name="_CollisionShape3D_49676" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_16" unique_id=858117154]
+[node name="_CollisionShape3D_49676" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_16" unique_id=374812518]
 shape = SubResource("SphereShape3D_cpsxm")
 disabled = true
 
-[node name="_Label3D_49677" type="Label3D" parent="Track/Waypoints/Waypoint_16" unique_id=2123326344]
+[node name="_Label3D_49677" type="Label3D" parent="Track/Waypoints/Waypoint_16" unique_id=194788343]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "16"
 
-[node name="Waypoint_17" type="Area3D" parent="Track/Waypoints" unique_id=1942754928]
+[node name="Waypoint_17" type="Area3D" parent="Track/Waypoints" unique_id=1278258961]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -188.10678, 5, -199.99257)
 
-[node name="_CollisionShape3D_49678" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_17" unique_id=1477301430]
+[node name="_CollisionShape3D_49678" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_17" unique_id=81447808]
 shape = SubResource("SphereShape3D_hmewc")
 disabled = true
 
-[node name="_Label3D_49679" type="Label3D" parent="Track/Waypoints/Waypoint_17" unique_id=1492720382]
+[node name="_Label3D_49679" type="Label3D" parent="Track/Waypoints/Waypoint_17" unique_id=1829952209]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "17"
 
-[node name="Waypoint_18" type="Area3D" parent="Track/Waypoints" unique_id=966049319]
+[node name="Waypoint_18" type="Area3D" parent="Track/Waypoints" unique_id=690314047]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -93.30022, 5, -175.26857)
 
-[node name="_CollisionShape3D_49680" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_18" unique_id=816983803]
+[node name="_CollisionShape3D_49680" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_18" unique_id=76583214]
 shape = SubResource("SphereShape3D_7ged1")
 disabled = true
 
-[node name="_Label3D_49681" type="Label3D" parent="Track/Waypoints/Waypoint_18" unique_id=386141245]
+[node name="_Label3D_49681" type="Label3D" parent="Track/Waypoints/Waypoint_18" unique_id=493169859]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "18"
 
-[node name="Waypoint_19" type="Area3D" parent="Track/Waypoints" unique_id=513045635]
+[node name="Waypoint_19" type="Area3D" parent="Track/Waypoints" unique_id=1162557472]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.443275, 5, -86.748535)
 
-[node name="_CollisionShape3D_49682" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_19" unique_id=511983554]
+[node name="_CollisionShape3D_49682" type="CollisionShape3D" parent="Track/Waypoints/Waypoint_19" unique_id=172295543]
 shape = SubResource("SphereShape3D_0mevm")
 disabled = true
 
-[node name="_Label3D_49683" type="Label3D" parent="Track/Waypoints/Waypoint_19" unique_id=19687453]
+[node name="_Label3D_49683" type="Label3D" parent="Track/Waypoints/Waypoint_19" unique_id=1355284387]
 pixel_size = 0.1
 billboard = 1
 modulate = Color(1, 0, 0, 1)
 text = "19"
 
-[node name="Area3D" type="Area3D" parent="Track" unique_id=1565165664 groups=["road"]]
+[node name="Area3D" type="Area3D" parent="Track" unique_id=727057016 groups=["road"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_layer = 2
 
-[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Track/Area3D" unique_id=2113302548]
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Track/Area3D" unique_id=1587848036]
 shape = SubResource("ConcavePolygonShape3D_w2501")
-
-[node name="Sync" type="Node" parent="." unique_id=1902602992]
-script = ExtResource("3_u44n3")
-control_mode = 0
-metadata/_custom_type_script = "uid://cgluo0suh3bck"

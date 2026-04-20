@@ -80,7 +80,10 @@ func _physics_process(delta):
 	_print_timer += delta
 	if _print_timer >= 1.0:
 		_print_timer = 0.0
-		_print_waypoint_info()
+		#_print_waypoint_info()
+		#var sensor := $BasicCar.get_node_or_null("CarPathRaySensor3D")
+		#if sensor:
+			#print("ray_obs: ", sensor.get_observations())
 
 	if ai.heuristic == "human":
 		if Input.is_action_pressed("ui_forward"):

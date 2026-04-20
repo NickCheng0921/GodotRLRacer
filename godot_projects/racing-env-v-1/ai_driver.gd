@@ -28,6 +28,11 @@ func get_obs() -> Dictionary:
 		obs.append(local_offset.x)   # forward (+) / back (-)
 		obs.append(-local_offset.z)  # right (+) / left (-)
 
+	var sensor := car.get_node_or_null("CarPathRaySensor3D")
+	if sensor:
+		var ray_obs : Array[float] = sensor.get_observations()
+		obs.append_array(ray_obs)
+
 	return {"obs": obs}
 
 func get_reward() -> float:

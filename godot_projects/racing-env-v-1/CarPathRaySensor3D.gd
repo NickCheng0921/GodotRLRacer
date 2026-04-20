@@ -1,10 +1,10 @@
 class_name CarPathRaySensor3D
 extends Node3D
 
-@export var max_range: float = 100.0 # look meters forward
-# use bin search to find boundary, control iteration count
-@export var iterations: int = 8  # precision = max_range / 2^iterations (8 → ~0.4m at 100m)
-@export var ray_down_length: float = 6.0 # ray marches outwards w/ bin search
+@export var max_range: float = 100.0
+@export var coarse_step: float = 4.0   # march step to find the edge bracket
+@export var refine_iterations: int = 6  # binary search within bracket (~coarse_step / 2^6 precision)
+@export var ray_down_length: float = 6.0
 @export var debug_draw: bool = true
 @export var color_on_road: Color = Color(0.2, 0.9, 0.2)
 @export var color_edge: Color = Color(1.0, 0.3, 0.1)
@@ -13,7 +13,6 @@ extends Node3D
 # [forward, forward-left, forward-right, left, right]
 const RAY_ANGLES_DEG: Array[float] = [0.0, -45.0, 45.0, -90.0, 90.0]
 
-# Road Area3D sits on physics layer 2
 const ROAD_LAYER := 2
 
 var distances: Array[float] = [0.0, 0.0, 0.0, 0.0, 0.0]
@@ -46,17 +45,26 @@ func _update_rays() -> void:
 	var forward := global_transform.basis.x
 	for i in RAY_ANGLES_DEG.size():
 		var dir := forward.rotated(Vector3.UP, deg_to_rad(RAY_ANGLES_DEG[i]))
-		distances[i] = _binary_search_ray(global_position, dir)
+		distances[i] = _find_edge(global_position, dir)
 
 
-# Binary search for the road edge along direction.
-# Costs iterations + 1 physics queries regardless of max_range.
-func _binary_search_ray(origin: Vector3, direction: Vector3) -> float:
-	if _is_on_road(origin + direction * max_range):
-		return max_range
+# Adaptive march: small steps near the car growing to coarse_step at distance.
+# Catches near edges that a fixed coarse step would skip, then refines with
+# binary search once the bracket is found.
+func _find_edge(origin: Vector3, direction: Vector3) -> float:
 	var lo := 0.0
-	var hi := max_range
-	for _i in iterations:
+	var travelled := 0.0
+	while travelled < max_range:
+		var step := minf(coarse_step, maxf(1.0, travelled * 0.2))
+		travelled = minf(travelled + step, max_range)
+		if not _is_on_road(origin + direction * travelled):
+			return _refine(origin, direction, lo, travelled)
+		lo = travelled
+	return max_range
+
+
+func _refine(origin: Vector3, direction: Vector3, lo: float, hi: float) -> float:
+	for _i in refine_iterations:
 		var mid := (lo + hi) * 0.5
 		if _is_on_road(origin + direction * mid):
 			lo = mid
@@ -89,9 +97,9 @@ func _draw_debug() -> void:
 	_imesh.surface_end()
 
 
-# Returns 5 values normalized to [0, 1]. Append directly into get_obs().
+# Returns values normalized to [0, 1]. Append directly into get_obs().
 func get_observations() -> Array[float]:
 	var obs: Array[float] = []
 	for d in distances:
-		obs.append(d / max_range)
+		obs.append(clampf(d / max_range, 0.0, 1.0))
 	return obs

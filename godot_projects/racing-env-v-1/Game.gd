@@ -104,7 +104,8 @@ func _teleport_to_waypoint(idx: int) -> void:
 	_car.linear_velocity  = Vector3.ZERO
 	_car.angular_velocity = Vector3.ZERO
 	_tp_cooldown = 2.0
-	_prev_dist_to_target = 0.0
+	var tp : Vector3 = _waypoints[_waypoint_index].global_position
+	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
 	_ai.reward -= 1.0
 
 # Create a small UI in bottom right w/ top down view

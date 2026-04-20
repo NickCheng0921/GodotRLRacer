@@ -7,9 +7,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--env_path", default=None, help="Path to Godot binary (omit to use editor)")
 parser.add_argument("--restore", default=None, help="Path to checkpoint to restore from")
 parser.add_argument("--speedup", default=16, type=int)
+parser.add_argument("--num_parallel", default=1, type=int)
 args = parser.parse_args()
 
-env = StableBaselinesGodotEnv(env_path=args.env_path, speedup=args.speedup)
+env = StableBaselinesGodotEnv(env_path=args.env_path, speedup=args.speedup, n_parallel=args.num_parallel)
 env = VecMonitor(env)
 
 if args.restore:
@@ -28,6 +29,6 @@ else:
         tensorboard_log="logs/",
     )
 
-model.learn(total_timesteps=1_000_000)
+model.learn(total_timesteps=500_000)
 model.save("racer_ppo")
 env.close()

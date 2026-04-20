@@ -54,7 +54,8 @@ Below images show human driven + agent learning at different stages
 **Environment**
 - facelift: lighting, meshes, level scenery
 - parallelized environment (multiple cars in one level + creation of a project executable to pass to gdrl)
-- add raycast sensors to car for RL observations
+- tune raycast sensors, adjust spacing and amount
+  - currently set to 100 meters max, heuristic march then bin search to get distance of car to road
 
 **RL**
 - model selection, currently using gdrl default
