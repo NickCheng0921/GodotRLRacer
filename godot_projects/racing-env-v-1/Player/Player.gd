@@ -14,6 +14,19 @@ var _w1_marker: MeshInstance3D
 func _ready() -> void:
 	$AIController3D.init(self)
 
+	# G-meter overlay bottom-left
+	var gmeter_scene := preload("res://Player/GMeter.tscn")
+	var canvas := CanvasLayer.new()
+	canvas.layer = 3
+	add_child(canvas)
+	var gmeter := gmeter_scene.instantiate()
+	gmeter.car = $BasicCar
+	gmeter.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	gmeter.custom_minimum_size = Vector2(160, 160)
+	gmeter.offset_top = -160.0
+	gmeter.offset_bottom = 0.0
+	canvas.add_child(gmeter)
+
 	# Minimap arrow: horizontal cone on render layer 2, invisible to main camera
 	var cone := CylinderMesh.new()
 	cone.top_radius = 0.0

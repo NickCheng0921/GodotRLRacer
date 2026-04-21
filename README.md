@@ -2,6 +2,10 @@
 
 Goal is to create a racing agent w/ reinforcement learning in a Godot Env
 
+| Human Driven, 1x speed | RL Racing Agent, 2x speed |
+|:-----------------------:|:-------------------------:|
+| ![](./assets/env_v1.01.gif) | ![](./assets/agent_v1.03.gif) |
+
 Godot handles the physics simulation, gdrl handles the RL + bridge between simulator and gym API
 
 # Current Progress
@@ -12,18 +16,6 @@ Human driving is currently smoother, but the agent learns the track decently in 
  - notice how the agent has really jerky movements, no penalty for steering or gas usage
  - agent rewards: moving closer to next waypoint, using throttle
  - agent penalties: flipping the car over, moving off track, moving away from next waypoint
-
-<div style="display: flex;">
-  <figure style="width: 50%; text-align: center;">
-    <img src="./assets/env_v1.01.gif" width="50%">
-    <figcaption>Human Driven, 1x speed</figcaption>
-  </figure>
-
-  <figure style="width: 50%; text-align: center;">
-    <img src="./assets/agent_v1.02_500k.gif" width="50%">
-    <figcaption>RL Racing Agent, 2x speed </figcaption>
-  </figure>
-</div>
 
 # To play manually
 

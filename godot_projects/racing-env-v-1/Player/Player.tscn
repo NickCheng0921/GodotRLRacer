@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://c51spnwfgd3qk"]
 
 [ext_resource type="Script" uid="uid://b7ob43i27p0if" path="res://Player/Player.gd" id="1_kpjcp"]
-[ext_resource type="PackedScene" uid="uid://ov7yqd82e1sf" path="res://basic_car.tscn" id="2_kpjcp"]
-[ext_resource type="Script" uid="uid://b2gv2em0vlint" path="res://ai_driver.gd" id="3_kne1u"]
+[ext_resource type="PackedScene" uid="uid://ov7yqd82e1sf" path="res://Car/basic_car.tscn" id="2_kpjcp"]
+[ext_resource type="Script" uid="uid://b2gv2em0vlint" path="res://Player/ai_driver.gd" id="3_kne1u"]
 
 [node name="Player" type="Node3D" unique_id=621963996]
 script = ExtResource("1_kpjcp")

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ov7yqd82e1sf"]
 
-[ext_resource type="Script" uid="uid://k4tr6jk3ym2s" path="res://basic_car.gd" id="1_dl6l5"]
-[ext_resource type="Script" uid="uid://b5gvkbrru6trs" path="res://CarPathRaySensor3D.gd" id="2_dl6l5"]
+[ext_resource type="Script" uid="uid://k4tr6jk3ym2s" path="res://Car/basic_car.gd" id="1_dl6l5"]
+[ext_resource type="Script" uid="uid://b5gvkbrru6trs" path="res://Car/CarPathRaySensor3D.gd" id="2_dl6l5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dl6l5"]
 albedo_color = Color(1, 0, 0, 1)
