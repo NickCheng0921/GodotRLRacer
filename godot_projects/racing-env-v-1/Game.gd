@@ -9,6 +9,10 @@ var _car: RigidBody3D
 var _tp_cooldown: float = 0.0
 var _ai: Node3D
 var _prev_dist_to_target: float = 0.0
+var _prev_velocity: Vector3 = Vector3.ZERO
+
+const LATERAL_G_PENALTY := 0.005
+const GRAVITY := 9.8
 
 func _ready() -> void:
 	_setup_topdown_viewport()
@@ -41,6 +45,14 @@ func _physics_process(delta: float) -> void:
 	_check_off_road()
 	_reward_progress()
 	_reward_throttle()
+	_penalize_lateral_g(delta)
+
+func _penalize_lateral_g(delta: float) -> void:
+	var accel := (_car.linear_velocity - _prev_velocity) / delta
+	_prev_velocity = _car.linear_velocity
+	var right      := -_car.global_transform.basis.z
+	var lateral_g  := absf(accel.dot(right) / GRAVITY)
+	_ai.reward -= lateral_g * LATERAL_G_PENALTY
 
 func _reward_throttle() -> void:
 	if _ai.throttle_action == 1:
