@@ -108,11 +108,10 @@ func _physics_process(delta):
 		var turn := Input.get_axis("ui_left", "ui_right")
 		$BasicCar.steer(-turn * $BasicCar.max_steering_angle)
 	else:
-		match ai.throttle_action:
-			1: $BasicCar.accelerate($BasicCar.max_engine_force)
-			2: $BasicCar.apply_brake($BasicCar.max_brake)
-			_: $BasicCar.reset_vehicle_controls(delta)
-		match ai.steer_action:
-			1: $BasicCar.steer($BasicCar.max_steering_angle)
-			2: $BasicCar.steer(-$BasicCar.max_steering_angle)
-			_: $BasicCar.steer(0.0)
+		if ai.throttle_action > 0.0:
+			$BasicCar.accelerate(ai.throttle_action * $BasicCar.max_engine_force)
+		elif ai.throttle_action < 0.0:
+			$BasicCar.apply_brake(-ai.throttle_action * $BasicCar.max_brake)
+		else:
+			$BasicCar.reset_vehicle_controls(delta)
+		$BasicCar.steer(ai.steer_action * $BasicCar.max_steering_angle)

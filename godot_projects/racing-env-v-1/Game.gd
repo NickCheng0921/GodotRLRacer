@@ -10,8 +10,11 @@ var _tp_cooldown: float = 0.0
 var _ai: Node3D
 var _prev_dist_to_target: float = 0.0
 var _prev_velocity: Vector3 = Vector3.ZERO
+var _lateral_g_smooth: float = 0.0
+var _print_timer: float = 0.0
 
-const LATERAL_G_PENALTY := 0.005
+const LATERAL_G_PENALTY := 0.002
+const LATERAL_G_SMOOTH  := 0.15 # running average lateral g force for lerp
 const GRAVITY := 9.8
 
 func _ready() -> void:
@@ -46,17 +49,22 @@ func _physics_process(delta: float) -> void:
 	_reward_progress()
 	_reward_throttle()
 	_penalize_lateral_g(delta)
+	#_print_timer += delta
+	#if _print_timer >= 0.5:
+		#_print_timer = 0.0
+		#print("reward: %.4f" % _ai.reward)
 
 func _penalize_lateral_g(delta: float) -> void:
 	var accel := (_car.linear_velocity - _prev_velocity) / delta
 	_prev_velocity = _car.linear_velocity
-	var right      := -_car.global_transform.basis.z
-	var lateral_g  := absf(accel.dot(right) / GRAVITY)
-	_ai.reward -= lateral_g * LATERAL_G_PENALTY
+	var right     := -_car.global_transform.basis.z
+	var raw_g     := absf(accel.dot(right) / GRAVITY)
+	_lateral_g_smooth = lerpf(_lateral_g_smooth, raw_g, LATERAL_G_SMOOTH)
+	_ai.reward -= _lateral_g_smooth * LATERAL_G_PENALTY
 
 func _reward_throttle() -> void:
-	if _ai.throttle_action == 1:
-		_ai.reward += 0.01
+	if _ai.throttle_action > 0.0:
+		_ai.reward += _ai.throttle_action * 0.01
 
 func _reward_progress() -> void:
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
@@ -115,6 +123,8 @@ func _teleport_to_waypoint(idx: int) -> void:
 	_car.global_transform = Transform3D(new_basis, wp.global_position + Vector3.UP * 0.5)
 	_car.linear_velocity  = Vector3.ZERO
 	_car.angular_velocity = Vector3.ZERO
+	_prev_velocity = Vector3.ZERO
+	_lateral_g_smooth = 0.0
 	_tp_cooldown = 2.0
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
