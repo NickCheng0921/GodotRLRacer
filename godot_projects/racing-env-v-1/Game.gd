@@ -13,7 +13,7 @@ var _prev_velocity: Vector3 = Vector3.ZERO
 var _lateral_g_smooth: float = 0.0
 var _print_timer: float = 0.0
 
-const LATERAL_G_PENALTY := 0.002
+const LATERAL_G_PENALTY := 0.004
 const LATERAL_G_SMOOTH  := 0.15 # running average lateral g force for lerp
 const GRAVITY := 9.8
 
