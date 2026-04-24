@@ -1,7 +1,7 @@
 extends Node3D
 
 const WAYPOINT_LOOKAHEAD := 2
-const WAYPOINT_ADVANCE_DIST := 8.0 # increment waypoint counter when we get close enough
+const WAYPOINT_ADVANCE_DIST := 4.0 # increment waypoint counter when we get close enough
 
 var _waypoints: Array = []
 var _waypoint_index: int = 1
@@ -12,10 +12,13 @@ var _prev_dist_to_target: float = 0.0
 var _prev_velocity: Vector3 = Vector3.ZERO
 var _lateral_g_smooth: float = 0.0
 var _print_timer: float = 0.0
+var _ray_sensor: CarPathRaySensor3D
 
-const LATERAL_G_PENALTY := 0.004
+const LATERAL_G_PENALTY := 0.003
 const LATERAL_G_SMOOTH  := 0.15 # running average lateral g force for lerp
 const GRAVITY := 9.8
+const CENTERING_SCALE := 0.003
+const SPEED_SCALE := 0.003
 
 func _ready() -> void:
 	_setup_topdown_viewport()
@@ -25,6 +28,7 @@ func _ready() -> void:
 	main_cam.cull_mask &= ~(1 << 1)  # hide render layer 2 (minimap arrow)
 	_ai = $Player/AIController3D
 	_ai.action_repeat = 8 # update action every n frames (hold for n)
+	_ray_sensor = _car.get_node("CarPathRaySensor3D")
 	_push_waypoints_to_player()
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
@@ -46,9 +50,11 @@ func _physics_process(delta: float) -> void:
 		return
 	_check_waypoint_advance()
 	_check_off_road()
-	_reward_progress()
-	_reward_throttle()
-	_penalize_lateral_g(delta)
+	#_reward_progress()
+	#_reward_throttle()
+	#_penalize_lateral_g(delta)
+	_reward_speed()
+	_reward_centering()
 	#_print_timer += delta
 	#if _print_timer >= 0.5:
 		#_print_timer = 0.0
@@ -66,6 +72,22 @@ func _reward_throttle() -> void:
 	if _ai.throttle_action > 0.0:
 		_ai.reward += _ai.throttle_action * 0.01
 
+func _reward_speed() -> void:
+	var log_speed := log(1.0 + _car.linear_velocity.length())
+	_ai.reward += log_speed * SPEED_SCALE
+
+func _reward_centering() -> void:
+	if not _ray_sensor:
+		return
+	var left := _ray_sensor.distances[3]
+	var right := _ray_sensor.distances[4]
+	var total := left + right
+	if total < 0.5:
+		return
+	var balance := 1.0 - absf(left - right) / total
+	var log_speed := log(1.0 + _car.linear_velocity.length())
+	_ai.reward += balance * log_speed * CENTERING_SCALE
+
 func _reward_progress() -> void:
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	var cp := _car.global_position
@@ -82,7 +104,7 @@ func _check_waypoint_advance() -> void:
 	if xz_dist < WAYPOINT_ADVANCE_DIST:
 		_waypoint_index = (_waypoint_index + 1) % _waypoints.size()
 		_push_waypoints_to_player()
-		_ai.reward += 1.0
+		#_ai.reward += 1.0
 
 func _setup_waypoints() -> void:
 	var wp_root = $Track/Waypoints
