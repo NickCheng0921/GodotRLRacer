@@ -26,11 +26,17 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
-	var center := size / 2.0
-	var radius := minf(size.x, size.y) / 2.0 * 0.78
+	var center := Vector2(size.x / 2.0, size.y / 2.0 + 10.0)
+	var radius := minf(size.x, size.y - 20.0) / 2.0 * 0.78
 	var font   := ThemeDB.fallback_font
 	var col_orange := Color(0.85, 0.4, 0.0)
 	var col_out    := Color(0.0, 0.0, 0.0, 0.9)
+
+	# Velocity above circle
+	if is_instance_valid(car):
+		var speed_str := "%.1f m/s" % car.linear_velocity.length()
+		draw_string_outline(font, Vector2(center.x - 26, 15), speed_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, 4, col_out)
+		draw_string(font, Vector2(center.x - 26, 15), speed_str, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1.0, 1.0, 1.0))
 
 	# Background
 	draw_circle(center, radius, Color(0.08, 0.08, 0.08, 0.88))

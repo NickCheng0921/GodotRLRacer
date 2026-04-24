@@ -52,7 +52,7 @@ func _physics_process(delta: float) -> void:
 	_check_off_road()
 	#_reward_progress()
 	#_reward_throttle()
-	#_penalize_lateral_g(delta)
+	_penalize_lateral_g(delta)
 	_reward_speed()
 	_reward_centering()
 	#_print_timer += delta

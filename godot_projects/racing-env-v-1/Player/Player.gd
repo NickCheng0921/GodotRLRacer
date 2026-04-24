@@ -22,10 +22,20 @@ func _ready() -> void:
 	var gmeter := gmeter_scene.instantiate()
 	gmeter.car = $BasicCar
 	gmeter.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	gmeter.custom_minimum_size = Vector2(160, 160)
-	gmeter.offset_top = -160.0
+	gmeter.custom_minimum_size = Vector2(160, 180)
+	gmeter.offset_top = -180.0
 	gmeter.offset_bottom = 0.0
 	canvas.add_child(gmeter)
+
+	var input_overlay := preload("res://Player/InputOverlay.gd").new()
+	input_overlay.ai = $AIController3D
+	input_overlay.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	input_overlay.custom_minimum_size = Vector2(160, 180)
+	input_overlay.offset_left = 160.0
+	input_overlay.offset_right = 320.0
+	input_overlay.offset_top = -180.0
+	input_overlay.offset_bottom = 0.0
+	canvas.add_child(input_overlay)
 
 	# Minimap arrow: horizontal cone on render layer 2, invisible to main camera
 	var cone := CylinderMesh.new()
@@ -101,12 +111,16 @@ func _physics_process(delta):
 	if ai.heuristic == "human":
 		if Input.is_action_pressed("ui_forward"):
 			$BasicCar.accelerate($BasicCar.max_engine_force)
+			ai.throttle_action = 1.0
 		elif Input.is_action_pressed("ui_backward"):
 			$BasicCar.apply_brake($BasicCar.max_brake)
+			ai.throttle_action = -1.0
 		else:
 			$BasicCar.reset_vehicle_controls(delta)
+			ai.throttle_action = 0.0
 		var turn := Input.get_axis("ui_left", "ui_right")
 		$BasicCar.steer(-turn * $BasicCar.max_steering_angle)
+		ai.steer_action = turn
 	else:
 		if ai.throttle_action > 0.0:
 			$BasicCar.accelerate(ai.throttle_action * $BasicCar.max_engine_force)
