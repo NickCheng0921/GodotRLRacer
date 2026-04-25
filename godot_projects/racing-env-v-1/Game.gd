@@ -20,6 +20,7 @@ const GRAVITY := 9.8
 const CENTERING_SCALE := 0.003
 const SPEED_SCALE := 0.003
 const OFF_ROAD_PENALTY := 0.1
+const KEEP_VELOCITY_ON_RESET := true
 
 func _ready() -> void:
 	_setup_topdown_viewport()
@@ -136,6 +137,17 @@ func _is_flipped() -> bool:
 	return _car.global_transform.basis.y.dot(Vector3.UP) < 0.0
 
 
+func _ground_spawn_pos(origin: Vector3) -> Vector3:
+	var space_state := get_world_3d().direct_space_state
+	var from := origin + Vector3.UP * 2.0
+	var to   := origin + Vector3.DOWN * 5.0
+	var query := PhysicsRayQueryParameters3D.create(from, to, 2)
+	query.collide_with_areas = true
+	var result := space_state.intersect_ray(query)
+	if result:
+		return result.position + Vector3.UP * 0.05
+	return origin + Vector3.UP * 0.5
+
 func _teleport_to_waypoint(idx: int) -> void:
 	var wp      := _waypoints[idx] as Node3D
 	var next_wp := _waypoints[(idx + 1) % _waypoints.size()] as Node3D
@@ -143,12 +155,17 @@ func _teleport_to_waypoint(idx: int) -> void:
 	var forward: Vector3 = (next_wp.global_position - wp.global_position).normalized()
 	var new_basis := Basis.looking_at(forward, Vector3.UP).rotated(Vector3.UP, PI / 2.0)
 
-	_car.global_transform = Transform3D(new_basis, wp.global_position + Vector3.UP * 0.5)
-	_car.linear_velocity  = Vector3.ZERO
+	var preserved_velocity := _car.linear_velocity
+	_car.global_transform = Transform3D(new_basis, _ground_spawn_pos(wp.global_position))
 	_car.angular_velocity = Vector3.ZERO
-	_prev_velocity = Vector3.ZERO
+	if KEEP_VELOCITY_ON_RESET:
+		_car.linear_velocity = new_basis.x * preserved_velocity.length()
+		_prev_velocity = _car.linear_velocity
+	else:
+		_car.linear_velocity = Vector3.ZERO
+		_prev_velocity = Vector3.ZERO
 	_lateral_g_smooth = 0.0
-	_tp_cooldown = 2.0
+	_tp_cooldown = 0.05
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
 	_ai.reward -= OFF_ROAD_PENALTY
