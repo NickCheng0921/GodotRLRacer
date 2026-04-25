@@ -19,6 +19,7 @@ const LATERAL_G_SMOOTH  := 0.15 # running average lateral g force for lerp
 const GRAVITY := 9.8
 const CENTERING_SCALE := 0.003
 const SPEED_SCALE := 0.003
+const OFF_ROAD_PENALTY := 0.1
 
 func _ready() -> void:
 	_setup_topdown_viewport()
@@ -50,9 +51,9 @@ func _physics_process(delta: float) -> void:
 		return
 	_check_waypoint_advance()
 	_check_off_road()
-	#_reward_progress()
+	_reward_progress()
 	#_reward_throttle()
-	_penalize_lateral_g(delta)
+	#_penalize_lateral_g(delta)
 	_reward_speed()
 	_reward_centering()
 	#_print_timer += delta
@@ -104,7 +105,7 @@ func _check_waypoint_advance() -> void:
 	if xz_dist < WAYPOINT_ADVANCE_DIST:
 		_waypoint_index = (_waypoint_index + 1) % _waypoints.size()
 		_push_waypoints_to_player()
-		#_ai.reward += 1.0
+		_ai.reward += 1.0
 
 func _setup_waypoints() -> void:
 	var wp_root = $Track/Waypoints
@@ -150,7 +151,7 @@ func _teleport_to_waypoint(idx: int) -> void:
 	_tp_cooldown = 2.0
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
-	_ai.reward -= 1.0
+	_ai.reward -= OFF_ROAD_PENALTY
 
 # Create a small UI in bottom right w/ top down view
 func _setup_topdown_viewport() -> void:

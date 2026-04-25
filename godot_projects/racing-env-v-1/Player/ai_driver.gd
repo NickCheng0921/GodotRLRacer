@@ -1,11 +1,13 @@
 extends AIController3D
 
 const MAX_SPEED := 30.0  # m/s, used to normalise speed observation
+const STEER_CHANGE_PENALTY := 0.03
 
 # continuous -1.0 (full brake) to 1.0 (full throttle), 0 = coast
 var throttle_action: float = 0.0
 # continuous -1.0 (full left) to 1.0 (full right)
 var steer_action: float = 0.0
+var _prev_steer_action: float = 0.0
 
 func get_obs() -> Dictionary:
 	var car: RigidBody3D = _player.get_node("BasicCar")
@@ -47,3 +49,5 @@ func get_action_space() -> Dictionary:
 func set_action(action) -> void:
 	throttle_action = clampf(action["throttle_action"][0], -1.0, 1.0)
 	steer_action    = clampf(action["steer_action"][0],    -1.0, 1.0)
+	reward -= absf(steer_action - _prev_steer_action) * STEER_CHANGE_PENALTY
+	_prev_steer_action = steer_action

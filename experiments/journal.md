@@ -2,6 +2,22 @@
 
 Contains info from my runs + learnings, ordered from most recent to least
 
+### 4/24/26 - Longer train w/ new config
+
+Maybe we'll get better performance if we just train for longer?
+
+I ran the train from 4/23 for 5M timesteps at a shorter rollout and saw that this resulted in a collapse from the mean episode reward plot. The train took an hour to complete and was done across 8 parallel envs at 16x sim speed. The reward config is currently: get close to waypoint, go fast, stay in road center. Problem is still phrased as single objective and not multi objective for simplicity.
+
+Not every timestep gets a reward (controlled w/ n_steps which was 128), controlling the rollout buffer size + the PPO update hyperparameters is something I haven't touched much on yet as my focus has been reward design.
+
+<img src="./extra_assets/v1.06_5M_collapse_reward_plot.png" width=50%>
+
+I tried to adjust this by lowering the penalty for going out of bounds from -1.0 to -0.1, reduced PPO epochs from 10 to 4, and increased the batch size for a less noisy gradient. This resulted in a more stable plot that didn't collapse.
+
+<img src="./extra_assets/v1.06_5M_fixed_reward_plot.png" width=50%>
+
+The initial rise comes from the agent learning to drive, and the dip is exploration into a suboptimal territory. What's important here is that it recovers, although I'm unsure how we can tell whether it'll peak higher again w/o training for more timesteps, say 10M+.
+
 ### 4/23/26 - New reward config
 
 Trying new approach where we reward the car for keeping it centered instead of getting closer to the waypoint.
