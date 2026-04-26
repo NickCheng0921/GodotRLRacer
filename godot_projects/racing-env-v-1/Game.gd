@@ -1,6 +1,6 @@
 extends Node3D
 
-const WAYPOINT_LOOKAHEAD := 2
+const WAYPOINT_LOOKAHEAD := 3
 const WAYPOINT_ADVANCE_DIST := 4.0 # increment waypoint counter when we get close enough
 
 var _waypoints: Array = []
@@ -17,10 +17,10 @@ var _ray_sensor: CarPathRaySensor3D
 const LATERAL_G_PENALTY := 0.003
 const LATERAL_G_SMOOTH  := 0.15 # running average lateral g force for lerp
 const GRAVITY := 9.8
-const CENTERING_SCALE := 0.003
+const CENTERING_SCALE := 0.01
 const SPEED_SCALE := 0.003
-const OFF_ROAD_PENALTY := 0.1
-const KEEP_VELOCITY_ON_RESET := true
+const OFF_ROAD_PENALTY := 2.5
+const KEEP_VELOCITY_ON_RESET := false
 
 func _ready() -> void:
 	_setup_topdown_viewport()
@@ -55,7 +55,7 @@ func _physics_process(delta: float) -> void:
 	_reward_progress()
 	#_reward_throttle()
 	#_penalize_lateral_g(delta)
-	_reward_speed()
+	#_reward_speed()
 	_reward_centering()
 	#_print_timer += delta
 	#if _print_timer >= 0.5:
@@ -87,15 +87,15 @@ func _reward_centering() -> void:
 	if total < 0.5:
 		return
 	var balance := 1.0 - absf(left - right) / total
-	var log_speed := log(1.0 + _car.linear_velocity.length())
-	_ai.reward += balance * log_speed * CENTERING_SCALE
+	#var log_speed := log(1.0 + _car.linear_velocity.length())
+	_ai.reward += balance * CENTERING_SCALE
 
 func _reward_progress() -> void:
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	var cp := _car.global_position
 	var curr_dist := Vector2(cp.x - tp.x, cp.z - tp.z).length()
-	if _car.linear_velocity.length() > 0.5:
-		_ai.reward += (_prev_dist_to_target - curr_dist) * 0.01
+	if _car.linear_velocity.length() > 0.5 and curr_dist < _prev_dist_to_target:
+		_ai.reward += 0.015
 	_prev_dist_to_target = curr_dist
 
 func _check_waypoint_advance() -> void:
@@ -145,7 +145,7 @@ func _ground_spawn_pos(origin: Vector3) -> Vector3:
 	query.collide_with_areas = true
 	var result := space_state.intersect_ray(query)
 	if result:
-		return result.position + Vector3.UP * 0.05
+		return result.position + Vector3.UP * 0.25
 	return origin + Vector3.UP * 0.5
 
 func _teleport_to_waypoint(idx: int) -> void:

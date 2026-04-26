@@ -1,0 +1,40 @@
+# Square circuit - 4 x 90-degree corners
+# Side length ~67 units, corners at (±33, 0, 0/67)
+# Repeated corner points for sharp turns with Catmull-Rom
+# x, y, z
+
+# Start: mid top straight
+0,   0,  0
+
+# Approach top-right corner
+27,  0,  0
+33,  0,  0
+33,  0,  0
+
+# Right straight
+33,  0,  7
+33,  0,  33
+33,  0,  60
+
+# Bottom-right corner
+33,  0,  67
+33,  0,  67
+27,  0,  67
+
+# Bottom straight
+0,   0,  67
+-27, 0,  67
+
+# Bottom-left corner
+-33, 0,  67
+-33, 0,  67
+-33, 0,  60
+
+# Left straight
+-33, 0,  33
+-33, 0,  7
+
+# Top-left corner
+-33, 0,  0
+-33, 0,  0
+-27, 0,  0

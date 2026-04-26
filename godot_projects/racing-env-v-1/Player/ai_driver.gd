@@ -1,13 +1,19 @@
 extends AIController3D
 
-const MAX_SPEED := 30.0  # m/s, used to normalise speed observation
+const MAX_SPEED := 50.0  # m/s, used to normalise speed observation
 const STEER_CHANGE_PENALTY := 0.03
+const STEER_SMOOTH_WINDOW := 0.5  # seconds to average steer history over
 
-# continuous -1.0 (full brake) to 1.0 (full throttle), 0 = coast
 var throttle_action: float = 0.0
-# continuous -1.0 (full left) to 1.0 (full right)
 var steer_action: float = 0.0
-var _prev_steer_action: float = 0.0
+
+var _steer_history: Array = []  # Array of [timestamp, steer_value]
+var _time_elapsed: float = 0.0
+
+func _physics_process(delta: float) -> void:
+	_time_elapsed += delta
+	var cutoff := _time_elapsed - STEER_SMOOTH_WINDOW
+	_steer_history = _steer_history.filter(func(e): return e[0] >= cutoff)
 
 func get_obs() -> Dictionary:
 	var car: RigidBody3D = _player.get_node("BasicCar")
@@ -49,5 +55,12 @@ func get_action_space() -> Dictionary:
 func set_action(action) -> void:
 	throttle_action = clampf(action["throttle_action"][0], -1.0, 1.0)
 	steer_action    = clampf(action["steer_action"][0],    -1.0, 1.0)
-	reward -= absf(steer_action - _prev_steer_action) * STEER_CHANGE_PENALTY
-	_prev_steer_action = steer_action
+
+	var avg_steer := 0.0
+	if _steer_history.size() > 0:
+		for entry in _steer_history:
+			avg_steer += entry[1]
+		avg_steer /= _steer_history.size()
+
+	reward -= absf(steer_action - avg_steer) * STEER_CHANGE_PENALTY
+	_steer_history.append([_time_elapsed, steer_action])

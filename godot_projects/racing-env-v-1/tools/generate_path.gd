@@ -4,11 +4,11 @@ extends EditorScript
 # ─────────────────────────────────────────────
 #  Config — edit these before running
 # ─────────────────────────────────────────────
-const POINTS_FILE    := "res://path_points/clover_path.txt"  # path to your x y z file
-const PATH_NODE_NAME := "Path3DClover"     # name given to the new Path3D node
+const POINTS_FILE    := "res://path_points/square_path.txt"  # path to your x y z file
+const PATH_NODE_NAME := "Path3DSquare"     # name given to the new Path3D node
 const SMOOTH_TENSION := 0.5                 # Catmull-Rom tension  (0.0 = loose, 1.0 = tight)
 
-const WAYPOINT_COUNT := 40
+const WAYPOINT_COUNT := 9
 const WAYPOINT_HEIGHT := 5.0
 
 # ─────────────────────────────────────────────
@@ -39,10 +39,10 @@ func _run() -> void:
 	csg.path_joined = true # connects gaps in path
 	# Make path phatter
 	csg.polygon = PackedVector2Array([
-		Vector2(-16.0,  0.0),
-		Vector2(-16.0,  0.1),
-		Vector2( 16.0,  0.1),
-		Vector2( 16.0,  0.0),
+		Vector2(-10.0,  0.0),
+		Vector2(-10.0,  0.1),
+		Vector2( 10.0,  0.1),
+		Vector2( 10.0,  0.0),
 	])
 
 	path.add_child(csg)
