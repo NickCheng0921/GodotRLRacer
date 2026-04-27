@@ -128,4 +128,4 @@ func _physics_process(delta):
 			$BasicCar.apply_brake(-ai.throttle_action * $BasicCar.max_brake)
 		else:
 			$BasicCar.reset_vehicle_controls(delta)
-		$BasicCar.steer(ai.steer_action * $BasicCar.max_steering_angle)
+		$BasicCar.steer(-ai.steer_action * $BasicCar.max_steering_angle)

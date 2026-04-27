@@ -19,7 +19,7 @@ const LATERAL_G_SMOOTH  := 0.15 # running average lateral g force for lerp
 const GRAVITY := 9.8
 const CENTERING_SCALE := 0.01
 const SPEED_SCALE := 0.003
-const OFF_ROAD_PENALTY := 2.5
+const OFF_ROAD_PENALTY := 2.0
 const KEEP_VELOCITY_ON_RESET := false
 
 func _ready() -> void:

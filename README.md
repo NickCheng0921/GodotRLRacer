@@ -10,12 +10,7 @@ Godot handles the physics simulation, gdrl handles the RL + bridge between simul
 
 # Current Progress
 
-Working on agent reward design for smoother, faster driving
-
-Human driving is currently smoother, but the agent learns the track decently in ~430 iterations across 500k steps
- - notice how the agent has really jerky movements, no penalty for steering or gas usage
- - agent rewards: moving closer to next waypoint, using throttle
- - agent penalties: flipping the car over, moving off track, moving away from next waypoint
+View experriments/journal.md
 
 # To play manually
 

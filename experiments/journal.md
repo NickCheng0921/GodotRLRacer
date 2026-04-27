@@ -2,6 +2,29 @@
 
 Contains info from my runs + learnings, ordered from most recent to least
 
+### 4/26/26 - Success on Square Track
+
+A new square track was created to target Agent's inability to learn 90 degree turns. The old Agent had an issue w/ using max throttle constantly to game the speed reward, so a couple changes were made to this run along w/ the new square map.
+1. Speed no longer incentivized directly, moving closer to waypoint gives a static reward that does not scale w/ speed
+2. Off-road penalty lowered to 2.0 from 5.0 to incentivize agent to explore (setting off-road penalty high results in Agent refusing to accelerate)
+3. Smoother gradient w/ more exploration done through longer train of 20M timesteps, higher PPO entropy (0.001 -> 0.005), and longer step collection (128 -> 256)
+
+
+Result is that the Agent successfully navigates the square track w/o going out of bounds and also **does not** use full throttle constantly. Training took ~3.5 hours across 16 envs at 16x speedup (20M timesteps per env).
+
+<img src="./extra_assets/v1.07_20M.gif" width=50%>
+
+The reward plot below shows that most of the reward was found in the first 5M of 20M steps, so I tried retraining w/ 5M instead.
+
+<img src="./extra_assets/v1.07_20M_reward_plot.png" width=50%>
+
+A 5M retrain shows a similar reward obtained, but the car wipes out from waypoint 06-07 since it's a really tight turn and it hasn't learned to use the next 3 waypoints properly to gauge speed. Below is the simulation + reward plot of the 5M train. All other params were identical to the 20M train.
+
+<img src="./extra_assets/v1.07_5M.gif" width=50%>
+
+<img src="./extra_assets/v1.07_5M_reward_plot.png" width=50%>
+
+
 ### 4/24/26 - Longer train w/ new config
 
 Maybe we'll get better performance if we just train for longer?
