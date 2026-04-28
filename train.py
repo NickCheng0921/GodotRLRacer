@@ -61,7 +61,7 @@ python train.py --env_path /c/Users/nicks/Documents/GodotRLRacer/godot_projects/
 """
 
 if args.restore:
-    model = PPO.load(args.restore, env=env)
+    model = PPO.load(args.restore, env=env, device="auto")
     print(f"Restored from {args.restore}")
 else:
     model = PPO(
@@ -74,6 +74,8 @@ else:
         ent_coef=0.005,
         verbose=0,
         tensorboard_log="logs/",
+        policy_kwargs=dict(net_arch=[512, 512]), # default 64, 64
+        device="auto",
     )
 
 # 500K took 841 sec on 8 parallel

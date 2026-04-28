@@ -19,6 +19,7 @@ The reward plot below shows that most of the reward was found in the first 5M of
 <img src="./extra_assets/v1.07_20M_reward_plot.png" width=50%>
 
 A 5M retrain shows a similar reward obtained, but the car wipes out from waypoint 06-07 since it's a really tight turn and it hasn't learned to use the next 3 waypoints properly to gauge speed. Below is the simulation + reward plot of the 5M train. All other params were identical to the 20M train.
+ - increasing the PPO MLP from (64, 64) to (512, 512) and training for 5M timesteps yields the same result of car struggling to take the first corner
 
 <img src="./extra_assets/v1.07_5M.gif" width=50%>
 
