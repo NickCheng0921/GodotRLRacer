@@ -2,6 +2,22 @@
 
 Contains info from my runs + learnings, ordered from most recent to least
 
+### 4/29/26 - Analysis of Current Training
+
+The Agent's been struggling to learn the track, so I added some callbacks to get a better picture of what's happening.
+
+Instead of only tracking the mean reward per episode, I also track its best lap time now and what % of runs in that episode successfully complete a lap. Below plots are for the same 10M timestep train that performs 2442 updates.
+
+<img src="./extra_assets/v1.08_reward_plot.png" width=50%>
+
+<img src="./extra_assets/v1.08_try1_20260429_003311_metrics.png" width=50%>
+
+There's a couple things to unpack here. The agent actually did learn a policy that drives decently well, but it lost this after training for longer implying that I should be saving multiple checkpoints instead of just the last one (was pushing this off). Interestingly, the reward stays consistent while the successful lap count craters. I can think of two ways to solve this directly: curriculum learning and adding new rewards.
+
+Curriculum learning incentivizes different stages of learning like walk before running, and adding new rewards would include a lap completion reward that I have to tune to balance against the current ones. We saw that setting the crash penalty too high can prevent the agent from driving, which is why the tuning is needed.
+
+The min lap time line is also low which implies that one of the envs might sample a good policy, but we're more interested in the overall effectiveness so I'm thinking of adding bands/median lap time as well. We also count laps even if the car crashes, resets to prev waypoint and finishes. I'm thinking of removing that as we get better policies and only count "clean" full laps w/o resets.
+
 ### 4/26/26 - Success on Square Track
 
 A new square track was created to target Agent's inability to learn 90 degree turns. The old Agent had an issue w/ using max throttle constantly to game the speed reward, so a couple changes were made to this run along w/ the new square map.
