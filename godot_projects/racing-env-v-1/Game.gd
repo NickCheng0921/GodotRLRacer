@@ -13,6 +13,7 @@ var _prev_velocity: Vector3 = Vector3.ZERO
 var _lateral_g_smooth: float = 0.0
 var _print_timer: float = 0.0
 var _ray_sensor: CarPathRaySensor3D
+var _track_name: String = "unknown"
 
 const LATERAL_G_PENALTY := 0.003
 const LATERAL_G_SMOOTH  := 0.15 # running average lateral g force for lerp
@@ -35,6 +36,10 @@ func _ready() -> void:
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
 
+	if scene_file_path:
+		_track_name = scene_file_path.get_file().get_basename()
+	MetricsRecorder.start_episode(_track_name)
+
 func _push_waypoints_to_player() -> void:
 	var player: Player = $Player
 	player.set_waypoints(get_next_waypoints(WAYPOINT_LOOKAHEAD), _waypoint_index)
@@ -47,6 +52,19 @@ func get_next_waypoints(n: int) -> Array:
 	return result
 
 func _physics_process(delta: float) -> void:
+	# sync.gd never resets n_steps (the agent.reset() call is commented out), so
+	# we own the episode lifecycle here: timeout -> write row, signal terminal to
+	# PPO, zero counters, teleport to start.
+	if _ai.n_steps >= _ai.reset_after:
+		MetricsRecorder.end_episode("timeout")
+		_ai.done = true
+		_ai.n_steps = 0
+		_ai.needs_reset = false
+		_waypoint_index = 1
+		_teleport_to_waypoint(0, false)
+		MetricsRecorder.start_episode(_track_name)
+	MetricsRecorder.tick(delta)
+
 	if _tp_cooldown > 0.0:
 		_tp_cooldown -= delta
 		return
@@ -104,7 +122,9 @@ func _check_waypoint_advance() -> void:
 	var tp := target.global_position
 	var xz_dist := Vector2(cp.x - tp.x, cp.z - tp.z).length()
 	if xz_dist < WAYPOINT_ADVANCE_DIST:
+		var prev_idx := _waypoint_index
 		_waypoint_index = (_waypoint_index + 1) % _waypoints.size()
+		MetricsRecorder.on_waypoint(_waypoint_index, prev_idx, _waypoints.size())
 		_push_waypoints_to_player()
 		_ai.reward += 1.0
 
@@ -148,7 +168,7 @@ func _ground_spawn_pos(origin: Vector3) -> Vector3:
 		return result.position + Vector3.UP * 0.25
 	return origin + Vector3.UP * 0.5
 
-func _teleport_to_waypoint(idx: int) -> void:
+func _teleport_to_waypoint(idx: int, penalize: bool = true) -> void:
 	var wp      := _waypoints[idx] as Node3D
 	var next_wp := _waypoints[(idx + 1) % _waypoints.size()] as Node3D
 
@@ -168,7 +188,8 @@ func _teleport_to_waypoint(idx: int) -> void:
 	_tp_cooldown = 0.05
 	var tp : Vector3 = _waypoints[_waypoint_index].global_position
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
-	_ai.reward -= OFF_ROAD_PENALTY
+	if penalize:
+		_ai.reward -= OFF_ROAD_PENALTY
 
 # Create a small UI in bottom right w/ top down view
 func _setup_topdown_viewport() -> void:

@@ -2,6 +2,33 @@
 
 Contains info from my runs + learnings, ordered from most recent to least
 
+### 4/30/26 - Multi-Run to view Policy Training Variance
+
+I made 5 runs to see the variation in the training for this config and it's surprisingly large. Each run takes 1.5 hrs to complete w/ 16x sim speedup.
+
+Partial laps don't get success rate or lap time, but failures and resets that resolve in a finished lap are counted. The actual values aren't too important here. Notice how run 1 failed and didn't recover and the other 4 runs have this "dipping" behavior?
+
+At some point for the 4 decent runs, the Agent does learn a good policy, then experiments around. I watched some of the finished runs and the Agent struggles to complete > 1 lap in a row (which we can solve by training for longer). The env also has a reset timeout which used to be 1K timesteps but this caused large training instabilities. I bumped it to 10K and the reward + success lap plots looked much better.
+
+My current goal is to still get an agent to learn the square track well, then have it tackle the clover leaf and copperstone (custom track I used before) tracks successfully.
+
+<table style="width:75%">
+  <tr>
+    <th style="text-align:center">Run 1 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 2 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 3 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 4 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 5 Success Rate + Lap Time</th>
+  </tr>
+  <tr>
+    <td style="text-align:center"><img src="./metrics/4_30_20260430_080319_metrics.png"/></td>
+    <td style="text-align:center"><img src="./metrics/4_30_20260430_094440_metrics.png"/></td>
+    <td style="text-align:center"><img src="./metrics/4_30_20260430_112756_metrics.png"/></td>
+    <td style="text-align:center"><img src="./metrics/4_30_20260430_131128_metrics.png"/></td>
+    <td style="text-align:center"><img src="./metrics/4_30_20260430_145518_metrics.png"/></td>
+  </tr>
+</table>
+
 ### 4/29/26 - Analysis of Current Training
 
 The Agent's been struggling to learn the track, so I added some callbacks to get a better picture of what's happening.

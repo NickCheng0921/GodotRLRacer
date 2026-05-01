@@ -11,6 +11,7 @@ var _steer_history: Array = []  # Array of [timestamp, steer_value]
 var _time_elapsed: float = 0.0
 
 func _physics_process(delta: float) -> void:
+	super._physics_process(delta)  # increments n_steps, sets needs_reset on timeout
 	_time_elapsed += delta
 	var cutoff := _time_elapsed - STEER_SMOOTH_WINDOW
 	_steer_history = _steer_history.filter(func(e): return e[0] >= cutoff)

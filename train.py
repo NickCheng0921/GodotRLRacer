@@ -6,6 +6,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import argparse
+import os
+import time
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
@@ -13,7 +15,12 @@ parser.add_argument("--env_path", default=None, help="Path to Godot binary (omit
 parser.add_argument("--restore", default=None, help="Path to checkpoint to restore from")
 parser.add_argument("--speedup", default=1, type=int)
 parser.add_argument("--num_parallel", default=1, type=int)
+parser.add_argument("--run_name", default=None, help="Run id for metrics dir; defaults to a timestamp")
 args = parser.parse_args()
+
+run_id = args.run_name or time.strftime("%Y%m%d_%H%M%S")
+os.environ["RACER_RUN_ID"] = run_id
+print(f"[train] RACER_RUN_ID={run_id}")
 
 
 class RewardPlotCallback(BaseCallback):
@@ -74,13 +81,13 @@ else:
         ent_coef=0.005,
         verbose=0,
         tensorboard_log="logs/",
-        policy_kwargs=dict(net_arch=[512, 512]), # default 64, 64
+        #policy_kwargs=dict(net_arch=[512, 512]), # default 64, 64
         device="auto",
     )
 
 # 500K took 841 sec on 8 parallel
 # Try to hit 4k updates
-total_timesteps =  5*1_000_000
+total_timesteps =  10*1e6
 model.learn(total_timesteps=total_timesteps, callback=RewardPlotCallback(total_timesteps, save_path="reward_plot.png"))
 model.save("racer_ppo")
 env.close()
