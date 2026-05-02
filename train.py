@@ -30,12 +30,36 @@ class RewardPlotCallback(BaseCallback):
         self.rewards = []
         self.timesteps = []
         self._pbar = tqdm(total=total_timesteps, unit="step", dynamic_ncols=True)
+        # Track sim vs model update time
+        self.sim_time = 0.0
+        self.train_time = 0.0
+        self._rollout_start_t = None
+        self._rollout_end_t = None
+        self._last_report_step = 0
+
+    def _on_rollout_start(self):
+        now = time.perf_counter()
+        if self._rollout_end_t is not None:
+            self.train_time += now - self._rollout_end_t
+        self._rollout_start_t = now
 
     def _on_rollout_end(self):
+        # Track simulation vs model update time
+        now = time.perf_counter()
+        self.sim_time += now - self._rollout_start_t
+        self._rollout_end_t = now
+
         mean_reward = self.model.rollout_buffer.rewards.mean()
         self.rewards.append(mean_reward)
         self.timesteps.append(self.num_timesteps)
-        self._pbar.set_description(f"ep_rew_mean: {mean_reward:.4f}")
+
+        total = self.sim_time + self.train_time
+        sim_pct = 100 * self.sim_time / total if total > 0 else 0
+        sps = (self.num_timesteps - self._last_report_step) / (now - self._rollout_start_t) if now > self._rollout_start_t else 0
+        self._last_report_step = self.num_timesteps
+        self._pbar.set_description(
+            f"rew {mean_reward:.3f} | sim {sim_pct:.0f}% ({self.sim_time:.1f}s) train {100-sim_pct:.0f}% ({self.train_time:.1f}s) | {sps:.0f} sps"
+        )
         self._pbar.update(self.num_timesteps - self._pbar.n)
 
     def _on_step(self) -> bool:
@@ -44,7 +68,10 @@ class RewardPlotCallback(BaseCallback):
     def _on_training_end(self):
         self._pbar.close()
         n_updates = self.model.num_timesteps // (self.model.n_steps * self.model.n_envs)
+        total = self.sim_time + self.train_time
         print(f"Training complete: {self.model.num_timesteps} timesteps, {n_updates} update steps")
+        print(f"Sim time:   {self.sim_time:.1f}s ({100*self.sim_time/total:.1f}%)")
+        print(f"Train time: {self.train_time:.1f}s ({100*self.train_time/total:.1f}%)")
         self._save_plot()
 
     def _save_plot(self):
@@ -64,7 +91,7 @@ env = StableBaselinesGodotEnv(env_path=args.env_path, speedup=args.speedup, n_pa
 env = VecMonitor(env)
 
 """
-python train.py --env_path /c/Users/nicks/Documents/GodotRLRacer/godot_projects/racing-env-v-1/builds/racing_env_v1.exe --num_parallel 16 --speedup 16
+python train.py --env_path /c/Users/nicks/Documents/GodotRLRacer/godot_projects/racing-env-v-1/builds/racing_env_v1.exe --num_parallel 1 --speedup 1024
 """
 
 if args.restore:
@@ -87,7 +114,7 @@ else:
 
 # 500K took 841 sec on 8 parallel
 # Try to hit 4k updates
-total_timesteps =  10*1e6
+total_timesteps = 20000
 model.learn(total_timesteps=total_timesteps, callback=RewardPlotCallback(total_timesteps, save_path="reward_plot.png"))
 model.save("racer_ppo")
 env.close()
