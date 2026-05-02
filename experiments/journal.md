@@ -21,11 +21,11 @@ My current goal is to still get an agent to learn the square track well, then ha
     <th style="text-align:center">Run 5 Success Rate + Lap Time</th>
   </tr>
   <tr>
-    <td style="text-align:center"><img src="./metrics/4_30_20260430_080319_metrics.png"/></td>
-    <td style="text-align:center"><img src="./metrics/4_30_20260430_094440_metrics.png"/></td>
-    <td style="text-align:center"><img src="./metrics/4_30_20260430_112756_metrics.png"/></td>
-    <td style="text-align:center"><img src="./metrics/4_30_20260430_131128_metrics.png"/></td>
-    <td style="text-align:center"><img src="./metrics/4_30_20260430_145518_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/metrics/4_30_20260430_080319_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/metrics/4_30_20260430_094440_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/metrics/4_30_20260430_112756_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/metrics/4_30_20260430_131128_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/metrics/4_30_20260430_145518_metrics.png"/></td>
   </tr>
 </table>
 
