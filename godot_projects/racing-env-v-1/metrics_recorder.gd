@@ -84,6 +84,12 @@ func _open_file() -> void:
 
 
 func _write_row(reason: String) -> void:
+	# Row schema (must match SCHEMA constant above):
+	#   episode_id, wall_clock_unix, run_id, env_pid, track_name,
+	#   episode_sim_duration_s, terminal_reason,
+	#   laps_completed, completed_lap,
+	#   first_lap_s, best_lap_s, mean_lap_s
+	# Lap columns are empty strings when laps == 0 (parsed as NaN by pandas).
 	var laps := _lap_times.size()
 	var row := PackedStringArray()
 	row.append(str(_episode_id))
