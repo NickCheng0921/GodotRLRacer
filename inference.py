@@ -3,8 +3,12 @@ from stable_baselines3 import PPO
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--env_path", default=None, help="Path to Godot binary (omit to use editor)")
-parser.add_argument("--model", default="racer_ppo", help="Path to saved model (without .zip)")
+parser.add_argument(
+    "--env_path", default=None, help="Path to Godot binary (omit to use editor)"
+)
+parser.add_argument(
+    "--model", default="racer_ppo", help="Path to saved model (without .zip)"
+)
 parser.add_argument("--speedup", default=1, type=int)
 args = parser.parse_args()
 

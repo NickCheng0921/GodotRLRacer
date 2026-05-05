@@ -153,7 +153,7 @@ else:
         batch_size=64,
         n_epochs=5,
         learning_rate=3e-4,
-        ent_coef=0.005,
+        ent_coef=0.02,
         verbose=0,
         tensorboard_log="logs/",
         # policy_kwargs=dict(net_arch=[512, 512]), # default 64, 64
@@ -163,7 +163,9 @@ else:
 # 500K took 841 sec on 8 parallel
 # Try to hit 4k updates
 # 1024*50 is 7 min 7 sec, * 55 is 6 hr 30 min min
-total_timesteps = 256 * 16 * 20
+# 500 steps on 256 w/ 16 env 16x takes 30 min
+update_steps = 5
+total_timesteps = 256 * args.num_parallel * update_steps
 model.learn(
     total_timesteps=total_timesteps,
     callback=RewardPlotCallback(total_timesteps, save_path="reward_plot.png"),

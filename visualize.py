@@ -15,6 +15,7 @@ Can open from Project -> Open user data folder
 
 /c/Users/nicks/AppData/Roaming/Godot/app_userdata/racing_env_v1/metrics/20260428_000931
 """
+
 import argparse
 import glob
 import os
@@ -32,7 +33,15 @@ def default_metrics_root() -> Path:
     appdata = os.environ.get("APPDATA")
     if appdata:
         return Path(appdata) / "Godot" / "app_userdata" / PROJECT_NAME / "metrics"
-    return Path.home() / ".local" / "share" / "godot" / "app_userdata" / PROJECT_NAME / "metrics"
+    return (
+        Path.home()
+        / ".local"
+        / "share"
+        / "godot"
+        / "app_userdata"
+        / PROJECT_NAME
+        / "metrics"
+    )
 
 
 def resolve_path(run_id, explicit):
@@ -103,15 +112,34 @@ def plot(df: pd.DataFrame, out_path: Path, label: str) -> None:
 
     laps = df.dropna(subset=["best_lap_s"])
     if not laps.empty:
-        ax2.scatter(laps["global_ep"], laps["best_lap_s"],
-                    s=8, alpha=0.3, color="gray", label="per-episode best")
+        ax2.scatter(
+            laps["global_ep"],
+            laps["best_lap_s"],
+            s=8,
+            alpha=0.3,
+            color="gray",
+            label="per-episode best",
+        )
         rolling_min = df["best_lap_s"].rolling(window, min_periods=1).min()
-        ax2.plot(df["global_ep"], rolling_min,
-                 color="firebrick", linewidth=1.5, label="rolling min")
+        ax2.plot(
+            df["global_ep"],
+            rolling_min,
+            color="firebrick",
+            linewidth=1.5,
+            label="rolling min",
+        )
         ax2.legend(loc="upper right")
     else:
-        ax2.text(0.5, 0.5, "no laps completed yet", ha="center", va="center",
-                 transform=ax2.transAxes, fontsize=14, color="gray")
+        ax2.text(
+            0.5,
+            0.5,
+            "no laps completed yet",
+            ha="center",
+            va="center",
+            transform=ax2.transAxes,
+            fontsize=14,
+            color="gray",
+        )
     ax2.set_ylabel("Lap time (s)")
     ax2.set_xlabel("Global episode")
     ax2.grid(alpha=0.3)
@@ -123,11 +151,20 @@ def plot(df: pd.DataFrame, out_path: Path, label: str) -> None:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Plot key metrics for a racing-env training run.")
-    p.add_argument("run_id", nargs="?", default=None,
-                   help="Run id (subfolder under metrics/). Omit to use latest.")
-    p.add_argument("--path", default=None,
-                   help="Explicit path to a CSV file or run directory (overrides run_id).")
+    p = argparse.ArgumentParser(
+        description="Plot key metrics for a racing-env training run."
+    )
+    p.add_argument(
+        "run_id",
+        nargs="?",
+        default=None,
+        help="Run id (subfolder under metrics/). Omit to use latest.",
+    )
+    p.add_argument(
+        "--path",
+        default=None,
+        help="Explicit path to a CSV file or run directory (overrides run_id).",
+    )
     p.add_argument("--out", default=None, help="Output PNG path.")
     args = p.parse_args()
 

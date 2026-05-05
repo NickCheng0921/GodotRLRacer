@@ -2,6 +2,51 @@
 
 Contains info from my runs + learnings, ordered from most recent to least
 
+### 5/4/26 - Entropy Plots
+
+Made 5 runs on 500 updates in 16 parallel envs each and looked at their entropy vs loss vs performance.
+
+These runs are more expensive to make, but show that the policies learned are very sensitive and entropy collapses before a good policy can be found (local minimums).
+
+Trying a couple additions to combat this:
+- increase entropy coefficient to allow for more exploration before settling
+- train longer (2k steps over 500)
+
+<table style="width:100%">
+  <tr>
+    <th style="text-align:center">Run 1 Loss + Entropy</th>
+    <th style="text-align:center">Run 2 Loss + Entropy</th>
+    <th style="text-align:center">Run 3 Loss + Entropy</th>
+    <th style="text-align:center">Run 4 Loss + Entropy</th>
+    <th style="text-align:center">Run 5 Loss + Entropy</th>
+  </tr>
+  <tr>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_205230_reward_plot.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_212200_reward_plot.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_221931_reward_plot.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_231042_reward_plot.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260504_002045_reward_plot.png"/></td>
+  </tr>
+</table>
+<table style="width:100%">
+  <tr>
+    <th style="text-align:center">Run 1 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 2 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 3 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 4 Success Rate + Lap Time</th>
+    <th style="text-align:center">Run 5 Success Rate + Lap Time</th>
+  </tr>
+  <tr>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_205230_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_212200_metrics.png"></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_221931_metrics.png"></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260503_231042_metrics.png"></td>
+    <td style="text-align:center"><img src="./extra_assets/5_4_exp/20260504_002045_metrics.png"></td>
+  </tr>
+</table>
+
+
+
 ### 4/30/26 - Multi-Run to view Policy Training Variance
 
 I made 5 runs to see the variation in the training for this config and it's surprisingly large. Each run takes 1.5 hrs to complete w/ 16x sim speedup.

@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-# Usage: ./run_n_times.sh [N]
+# Usage: ./run_n_times.sh [N] [NUM_PARALLEL] [SPEEDUP]
 # Runs train.py then visualize.py N times sequentially. N defaults to 1.
-# Each train.py invocation auto-generates its own RACER_RUN_ID timestamp,
-# so runs land in separate metrics/<run_id>/ directories.
+# All outputs are bundled into run_<uuid8>/.
 
 set -u
 cd "$(dirname "$0")"
 
 N=${1:-1}
+NUM_PARALLEL=${2:-16}
+SPEEDUP=${3:-16}
 EXE="/c/Users/nicks/Documents/GodotRLRacer/godot_projects/racing-env-v-1/builds/racing_env_v1.exe"
+BUNDLE="run_$(python -c 'import uuid; print(str(uuid.uuid4())[:8])')"
+mkdir -p "$BUNDLE"
+echo "Bundle dir: $BUNDLE"
 
 for i in $(seq 1 "$N"); do
     echo
@@ -16,21 +20,30 @@ for i in $(seq 1 "$N"); do
     echo "  Run $i / $N  ($(date))"
     echo "=========================================="
 
-    # Generate the run ID here so we control it and can use it for renaming.
     RUN_ID=$(date +%Y%m%d_%H%M%S)
-    export RACER_RUN_ID="$RUN_ID"
+    RUN_START=$(date +%s)
+    TRAIN_LOG=$(mktemp)
+    RACER_RUN_ID="$RUN_ID" python train.py --env_path "$EXE" --num_parallel "$NUM_PARALLEL" --speedup "$SPEEDUP" 2>&1 | tee "$TRAIN_LOG"
+    RUN_END=$(date +%s)
 
-    python train.py --env_path "$EXE" --num_parallel 16 --speedup 16
-    python visualize.py
+    {
+        echo "=== Run $i / $N  ($RUN_ID) ==="
+        echo "num_parallel=$NUM_PARALLEL  speedup=$SPEEDUP"
+        grep -E "^Training complete:|^Sim time:|^Train time:" "$TRAIN_LOG"
+        echo "Total time: $((RUN_END - RUN_START))s"
+        echo ""
+    } >> "$BUNDLE/meta.txt"
+    rm "$TRAIN_LOG"
 
-    # Rename reward_plot.png to include the timestamp.
+    python visualize.py --out "$BUNDLE/${RUN_ID}_metrics.png"
+
     if [ -f reward_plot.png ]; then
-        mv reward_plot.png "reward_plot_${RUN_ID}.png"
-        echo "Renamed reward_plot.png -> reward_plot_${RUN_ID}.png"
+        mv reward_plot.png "$BUNDLE/${RUN_ID}_reward_plot.png"
+        echo "Moved reward_plot.png -> $BUNDLE/${RUN_ID}_reward_plot.png"
     else
         echo "Warning: reward_plot.png not found after run $i"
     fi
 done
 
 echo
-echo "All $N runs complete."
+echo "All $N runs complete. Outputs in $BUNDLE/"
