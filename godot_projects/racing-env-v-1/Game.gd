@@ -190,6 +190,7 @@ func _teleport_to_waypoint(idx: int, penalize: bool = true) -> void:
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
 	if penalize:
 		_ai.reward -= OFF_ROAD_PENALTY
+		MetricsRecorder.on_teleport()
 
 # Create a small UI in bottom right w/ top down view
 func _setup_topdown_viewport() -> void:

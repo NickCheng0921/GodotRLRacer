@@ -81,9 +81,12 @@ def print_summary(df: pd.DataFrame) -> None:
     n = len(df)
     n_complete = int(df["completed_lap"].sum())
     total_laps = int(df["laps_completed"].sum())
+    n_clean = int(df.get("clean_completed_lap", pd.Series(dtype=float)).fillna(0).sum())
+    total_clean = int(df.get("clean_laps_completed", pd.Series(dtype=float)).fillna(0).sum())
     print(f"  episodes:        {n}")
     print(f"  with >=1 lap:    {n_complete} ({n_complete / n:.1%})")
-    print(f"  total laps:      {total_laps}")
+    print(f"  with >=1 clean:  {n_clean} ({n_clean / n:.1%})")
+    print(f"  total laps:      {total_laps}  (clean: {total_clean})")
     best = df["best_lap_s"].dropna()
     if not best.empty:
         print(f"  fastest lap:     {best.min():.3f} s")
@@ -92,6 +95,8 @@ def print_summary(df: pd.DataFrame) -> None:
     tail = df.tail(last)
     print(f"  last {last} eps:")
     print(f"    success rate:  {tail['completed_lap'].mean():.1%}")
+    if "clean_completed_lap" in tail.columns:
+        print(f"    clean rate:    {tail['clean_completed_lap'].fillna(0).mean():.1%}")
     tail_best = tail["best_lap_s"].dropna()
     if not tail_best.empty:
         print(f"    fastest lap:   {tail_best.min():.3f} s")
@@ -101,14 +106,30 @@ def plot(df: pd.DataFrame, out_path: Path, label: str) -> None:
     n = len(df)
     window = max(20, n // 50)
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7), sharex=True)
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(11, 9), sharex=True)
     fig.suptitle(f"{label}  -  {n} episodes  (rolling window: {window})")
 
     success = df["completed_lap"].rolling(window, min_periods=1).mean()
     ax1.plot(df["global_ep"], success, color="steelblue", linewidth=1.5)
-    ax1.set_ylabel("Success rate")
+    ax1.set_ylabel("Success rate (any lap)")
     ax1.set_ylim(-0.02, 1.02)
     ax1.grid(alpha=0.3)
+
+    if "clean_completed_lap" in df.columns:
+        clean_success = (
+            df["clean_completed_lap"].fillna(0).rolling(window, min_periods=1).mean()
+        )
+        ax3.plot(df["global_ep"], clean_success, color="seagreen", linewidth=1.5)
+    else:
+        ax3.text(
+            0.5, 0.5, "no clean-lap data (older run)",
+            ha="center", va="center", transform=ax3.transAxes,
+            fontsize=12, color="gray",
+        )
+    ax3.set_ylabel("Clean lap success rate")
+    ax3.set_ylim(-0.02, 1.02)
+    ax3.set_xlabel("Global episode")
+    ax3.grid(alpha=0.3)
 
     laps = df.dropna(subset=["best_lap_s"])
     if not laps.empty:
@@ -141,7 +162,6 @@ def plot(df: pd.DataFrame, out_path: Path, label: str) -> None:
             color="gray",
         )
     ax2.set_ylabel("Lap time (s)")
-    ax2.set_xlabel("Global episode")
     ax2.grid(alpha=0.3)
 
     fig.tight_layout()
