@@ -2,6 +2,23 @@
 
 Contains info from my runs + learnings, ordered from most recent to least
 
+### 5/6/26 - Increased Entropy to 0.02
+
+Increasing entropy speeds up the convergence and results in less variation among learned policies. However, the final car has some trouble completing laps w/o going off course. Considering adding a reward for a "clean" lap w/o resets.
+
+<table style="width:75%">
+  <tr>
+    <th style="text-align:center">Run 1 Loss + Entropy</th>
+    <th style="text-align:center">Run 2 Loss + Entropy</th>
+    <th style="text-align:center">Run 3 Loss + Entropy</th>
+  </tr>
+  <tr>
+    <td style="text-align:center"><img src="./extra_assets/5_6_exp/20260506_001104_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/5_6_exp/20260506_035107_metrics.png"/></td>
+    <td style="text-align:center"><img src="./extra_assets/5_6_exp/20260506_073042_metrics.png"/></td>
+  </tr>
+</table>
+
 ### 5/4/26 - Entropy Plots
 
 Made 5 runs on 500 updates in 16 parallel envs each and looked at their entropy vs loss vs performance.

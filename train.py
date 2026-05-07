@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 import argparse
 import os
 import time
+import psutil
+
+psutil.Process(os.getpid()).nice(psutil.ABOVE_NORMAL_PRIORITY_CLASS)
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
@@ -110,6 +113,7 @@ class RewardPlotCallback(BaseCallback):
         ax.set_ylabel("Mean Reward", color="steelblue")
         ax.tick_params(axis="y", labelcolor="steelblue")
         ax.set_title("Training Reward & Entropy")
+        ax.grid(alpha=0.3)
 
         valid_entropy = [
             (t, e) for t, e in zip(self.timesteps, self.entropies) if e is not None
@@ -134,7 +138,10 @@ class RewardPlotCallback(BaseCallback):
 
 
 env = StableBaselinesGodotEnv(
-    env_path=args.env_path, speedup=args.speedup, n_parallel=args.num_parallel
+    env_path=args.env_path,
+    speedup=args.speedup,
+    n_parallel=args.num_parallel,
+    timeout=120,
 )
 env = VecMonitor(env)
 
@@ -149,10 +156,10 @@ else:
     model = PPO(
         "MultiInputPolicy",
         env,
-        n_steps=256,
+        n_steps=1024,
         batch_size=64,
         n_epochs=5,
-        learning_rate=3e-4,
+        learning_rate=1e-4,
         ent_coef=0.02,
         verbose=0,
         tensorboard_log="logs/",
@@ -164,8 +171,8 @@ else:
 # Try to hit 4k updates
 # 1024*50 is 7 min 7 sec, * 55 is 6 hr 30 min min
 # 500 steps on 256 w/ 16 env 16x takes 30 min
-update_steps = 5
-total_timesteps = 256 * args.num_parallel * update_steps
+update_steps = 500 * 2
+total_timesteps = 1024 * args.num_parallel * update_steps
 model.learn(
     total_timesteps=total_timesteps,
     callback=RewardPlotCallback(total_timesteps, save_path="reward_plot.png"),
