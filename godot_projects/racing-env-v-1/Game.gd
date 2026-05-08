@@ -21,7 +21,10 @@ const GRAVITY := 9.8
 const CENTERING_SCALE := 0.01
 const SPEED_SCALE := 0.003
 const OFF_ROAD_PENALTY := 2.0
+const CLEAN_LAP_BONUS := 10.0
 const KEEP_VELOCITY_ON_RESET := false
+
+var _lap_dirty: bool = false
 
 func _ready() -> void:
 	_setup_topdown_viewport()
@@ -61,6 +64,7 @@ func _physics_process(delta: float) -> void:
 		_ai.n_steps = 0
 		_ai.needs_reset = false
 		_waypoint_index = 1
+		_lap_dirty = false
 		_teleport_to_waypoint(0, false)
 		MetricsRecorder.start_episode(_track_name)
 	MetricsRecorder.tick(delta)
@@ -124,9 +128,14 @@ func _check_waypoint_advance() -> void:
 	if xz_dist < WAYPOINT_ADVANCE_DIST:
 		var prev_idx := _waypoint_index
 		_waypoint_index = (_waypoint_index + 1) % _waypoints.size()
-		MetricsRecorder.on_waypoint(_waypoint_index, prev_idx, _waypoints.size())
+		var lap_clean := not _lap_dirty
+		MetricsRecorder.on_waypoint(_waypoint_index, prev_idx, _waypoints.size(), lap_clean)
 		_push_waypoints_to_player()
 		_ai.reward += 1.0
+		if prev_idx == _waypoints.size() - 1 and _waypoint_index == 0:
+			if lap_clean:
+				_ai.reward += CLEAN_LAP_BONUS
+			_lap_dirty = false
 
 func _setup_waypoints() -> void:
 	var wp_root = $Track/Waypoints
@@ -190,7 +199,7 @@ func _teleport_to_waypoint(idx: int, penalize: bool = true) -> void:
 	_prev_dist_to_target = Vector2(_car.global_position.x - tp.x, _car.global_position.z - tp.z).length()
 	if penalize:
 		_ai.reward -= OFF_ROAD_PENALTY
-		MetricsRecorder.on_teleport()
+		_lap_dirty = true
 
 # Create a small UI in bottom right w/ top down view
 func _setup_topdown_viewport() -> void:
