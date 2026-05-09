@@ -161,8 +161,9 @@ def plot(df: pd.DataFrame, out_path: Path, label: str) -> None:
             fontsize=14,
             color="gray",
         )
-    ax2.set_ylabel("Lap time (s)")
-    ax2.grid(alpha=0.3)
+    ax2.set_ylabel("Lap time (s, log)")
+    ax2.set_yscale("log")
+    ax2.grid(alpha=0.3, which="both")
 
     fig.tight_layout()
     fig.savefig(out_path, dpi=120)
